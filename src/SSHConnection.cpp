@@ -71,11 +71,10 @@ int SSHConnection::createAccount(const std::string& username, const std::string&
     SSHConnection scriptAccess("appuser","apppass");
 
     stringstream ss;
-    ss << "sudo /gudtimes/scripts/create_account.sh \"";
+    ss << "sudo /gudtimes/scripts/create_account.sh ";
     ss << username;
-    ss << "\" \"";
+    ss << " ";
     ss << password;
-    ss << "\"";
 
     const string commandString = ss.str();
 
@@ -119,11 +118,10 @@ int SSHConnection::deleteAccount(const std::string& username, const std::string&
     SSHConnection scriptAccess("appuser","apppass");
 
     stringstream ss;
-    ss << "sudo /gudtimes/scripts/delete_account.sh \"";
+    ss << "sudo /gudtimes/scripts/delete_account.sh ";
     ss << username;
-    ss << "\" \"";
+    ss << " ";
     ss << password;
-    ss << "\"";
 
     const string commandString = ss.str();
 
@@ -159,7 +157,7 @@ int SSHConnection::getCalendars()
     sftp_dir userDir;
     sftp_attributes attributes;
 
-    string userDirLoc = "/gudtimes/userfiles/" + session_user;
+    string userDirLoc = "/" + session_user;
 
     userDir = sftp_opendir(sftpSession, userDirLoc.c_str());
 
