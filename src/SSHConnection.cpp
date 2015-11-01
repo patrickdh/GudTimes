@@ -4,10 +4,12 @@ using namespace std;
 
 SSHConnection::SSHConnection(const string& username, const string& password)
 {
-    if (username.length() == 0){
+    if (username.length() == 0)
+    {
         throw SSHException("Please enter a username");
     }
-    if (password.length() == 0){
+    if (password.length() == 0)
+    {
         throw SSHException("Please enter a password");
     }
 
@@ -15,16 +17,19 @@ SSHConnection::SSHConnection(const string& username, const string& password)
     session.setOption(SSH_OPTIONS_PORT, 320);
     session.setOption(SSH_OPTIONS_USER, username.c_str());
 
-    try{
+    try
+    {
         session.connect();
     }
-    catch(ssh::SshException& e){
+    catch(ssh::SshException& e)
+    {
         throw SSHException("Could not connect to server");
     }
 
     int res = session.userauthPassword(password.c_str());
 
-    if (res != SSH_AUTH_SUCCESS){
+    if (res != SSH_AUTH_SUCCESS)
+    {
         throw SSHException("Invalid username or password");
     }
 }
@@ -36,19 +41,24 @@ SSHConnection::~SSHConnection()
 
 int SSHConnection::createAccount(const std::string& username, const std::string& password)
 {
-    if (username.length() == 0){
+    if (username.length() == 0)
+    {
         throw SSHException("Please enter a username");
     }
-    if (password.length() == 0){
+    if (password.length() == 0)
+    {
         throw SSHException("Please enter a password");
     }
-    if (username.find("\"") != string::npos){
+    if (username.find("\"") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (username.find(" ") != string::npos){
+    if (username.find(" ") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (password.find("\"") != string::npos){
+    if (password.find("\"") != string::npos)
+    {
         throw SSHException("Illegal character in password");
     }
 
@@ -73,19 +83,24 @@ int SSHConnection::createAccount(const std::string& username, const std::string&
 
 int SSHConnection::deleteAccount(const std::string& username, const std::string& password)
 {
-    if (username.length() == 0){
+    if (username.length() == 0)
+    {
         throw SSHException("Please enter a username");
     }
-    if (password.length() == 0){
+    if (password.length() == 0)
+    {
         throw SSHException("Please enter a password");
     }
-    if (username.find("\"") != string::npos){
+    if (username.find("\"") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (username.find(" ") != string::npos){
+    if (username.find(" ") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (password.find("\"") != string::npos){
+    if (password.find("\"") != string::npos)
+    {
         throw SSHException("Illegal character in password");
     }
 
@@ -180,7 +195,8 @@ int SSHConnection::getCalendars(const std::string& username)
                 {
                     break;
                 }
-                else if (nbytes < 0) {
+                else if (nbytes < 0)
+                {
                     sftp_close(file);
                     sftp_attributes_free(attributes);
                     sftp_closedir(userDir);
@@ -202,11 +218,11 @@ int SSHConnection::getCalendars(const std::string& username)
             outFile.close();
             if (outFile.fail())
             {
-                    sftp_close(file);
-                    sftp_attributes_free(attributes);
-                    sftp_closedir(userDir);
-                    sftp_free(sftpSession);
-                    throw SSHException("Error closing file (client)");
+                sftp_close(file);
+                sftp_attributes_free(attributes);
+                sftp_closedir(userDir);
+                sftp_free(sftpSession);
+                throw SSHException("Error closing file (client)");
             }
 
             rc = sftp_close(file);
@@ -226,7 +242,8 @@ int SSHConnection::getCalendars(const std::string& username)
     }
 
     rc = sftp_closedir(userDir);
-    if (rc != SSH_OK)  {
+    if (rc != SSH_OK)
+    {
         sftp_free(sftpSession);
         throw SSHException("Error closing user directory");
     }
