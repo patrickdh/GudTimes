@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <fcntl.h>
+#include <wx/filename.h>
 
 class SSHConnection
 {
@@ -20,6 +21,8 @@ class SSHConnection
         static int createAccount(const std::string& username, const std::string& password);
         static int deleteAccount(const std::string& username, const std::string& password);
         int getCalendars();
+        void uploadFile(wxFileName fileName);
+        void deleteFile(const std::string& fileName);
     protected:
     private:
         ssh::Session session;

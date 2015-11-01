@@ -265,6 +265,118 @@ int SSHConnection::getCalendars()
     return numCalendars;
 }
 
+void SSHConnection::uploadFile(wxFileName fileName)
+{
+    ssh_session currSession = session.getCSession();
+    int rc;
+
+    sftp_session sftpSession = sftp_new(currSession);
+    if (sftpSession == NULL)
+    {
+        throw SSHException("Unable to allocate SFTP session");
+    }
+
+    rc = sftp_init(sftpSession);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to initialize SFTP session");
+    }
+
+    string userDirLoc = "/" + session_user;
+
+    int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+    sftp_file file;
+    int nwritten;
+
+    string filePath = userDirLoc + "/" + fileName.GetFullName().mb_str();
+
+    file = sftp_open(sftpSession, filePath.c_str(), access_type, S_IRWXU);
+    if (file == NULL)
+    {
+        string error(ssh_get_error(currSession));
+        sftp_free(sftpSession);
+        throw SSHException("Can't open file for writing (server)");
+    }
+
+    ifstream inFile(fileName.GetFullPath().mb_str());
+    if (inFile.fail())
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Can't open file for reading (client)");
+    }
+
+    stringstream ss;
+    ss << inFile.rdbuf();
+    string fileData = ss.str();
+
+    if (inFile.fail())
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error reading file");
+    }
+
+    nwritten = sftp_write(file,fileData.c_str(),fileData.length());
+
+    if ( (unsigned int)nwritten != fileData.length())
+    {
+        string error(ssh_get_error(currSession));
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error writing file");
+    }
+
+    inFile.close();
+    if (inFile.fail())
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error closing file (client)");
+    }
+
+    rc = sftp_close(file);
+    if (rc != SSH_OK)
+    {
+        throw SSHException("Error closing file (server)");
+    }
+
+    sftp_free(sftpSession);
+}
+
+void SSHConnection::deleteFile(const std::string& fileName)
+{
+    ssh_session currSession = session.getCSession();
+    int rc;
+
+    sftp_session sftpSession = sftp_new(currSession);
+    if (sftpSession == NULL)
+    {
+        throw SSHException("Unable to allocate SFTP session");
+    }
+
+    rc = sftp_init(sftpSession);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to initialize SFTP session");
+    }
+
+    string userDirLoc = "/" + session_user;
+
+    string filePath = userDirLoc + "/" + fileName;
+
+    rc = sftp_unlink(sftpSession, filePath.c_str());
+
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to delete file (server)");
+    }
+
+    sftp_free(sftpSession);
+}
 
 SSHException::SSHException(const string& error) : errorDescription(error) {}
 string SSHException::what()
