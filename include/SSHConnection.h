@@ -17,8 +17,8 @@ class SSHConnection
     public:
         SSHConnection(const std::string& username,const std::string& password);
         ~SSHConnection();
-        int createAccount(const std::string& username, const std::string& password);
-        int deleteAccount(const std::string& username, const std::string& password);
+        static int createAccount(const std::string& username, const std::string& password);
+        static int deleteAccount(const std::string& username, const std::string& password);
         int getCalendars();
     protected:
     private:

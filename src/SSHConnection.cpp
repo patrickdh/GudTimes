@@ -68,6 +68,8 @@ int SSHConnection::createAccount(const std::string& username, const std::string&
         throw SSHException("Illegal character in password");
     }
 
+    SSHConnection scriptAccess("appuser","apppass");
+
     stringstream ss;
     ss << "sudo /gudtimes/scripts/create_account.sh \"";
     ss << username;
@@ -77,7 +79,7 @@ int SSHConnection::createAccount(const std::string& username, const std::string&
 
     const string commandString = ss.str();
 
-    ssh::Channel channel(session);
+    ssh::Channel channel(scriptAccess.session);
     channel.openSession();
     channel.requestExec(commandString.c_str());
     channel.sendEof();
@@ -114,6 +116,8 @@ int SSHConnection::deleteAccount(const std::string& username, const std::string&
         throw SSHException("Illegal character in password");
     }
 
+    SSHConnection scriptAccess("appuser","apppass");
+
     stringstream ss;
     ss << "sudo /gudtimes/scripts/delete_account.sh \"";
     ss << username;
@@ -123,7 +127,7 @@ int SSHConnection::deleteAccount(const std::string& username, const std::string&
 
     const string commandString = ss.str();
 
-    ssh::Channel channel(session);
+    ssh::Channel channel(scriptAccess.session);
     channel.openSession();
     channel.requestExec(commandString.c_str());
     channel.sendEof();
