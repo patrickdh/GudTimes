@@ -15,9 +15,9 @@ SSHConnection::SSHConnection(const string& username, const string& password)
 
     session_user = username;
 
-    session.setOption(SSH_OPTIONS_HOST, "192.168.42.2");
-    session.setOption(SSH_OPTIONS_PORT, 320);
-    session.setOption(SSH_OPTIONS_USER, username.c_str());
+    session.setOption(SSH_OPTIONS_HOST, "vm320stu-1.caslab.queensu.ca");
+    session.setOption(SSH_OPTIONS_PORT, 22);
+    session.setOption(SSH_OPTIONS_USER, session_user.c_str());
 
     try
     {
