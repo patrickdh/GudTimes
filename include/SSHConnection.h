@@ -19,10 +19,11 @@ class SSHConnection
         ~SSHConnection();
         int createAccount(const std::string& username, const std::string& password);
         int deleteAccount(const std::string& username, const std::string& password);
-        int getCalendars(const std::string& username);
+        int getCalendars();
     protected:
     private:
         ssh::Session session;
+        std::string session_user;
 };
 
 class SSHException

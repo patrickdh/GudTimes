@@ -13,6 +13,8 @@ SSHConnection::SSHConnection(const string& username, const string& password)
         throw SSHException("Please enter a password");
     }
 
+    session_user = username;
+
     session.setOption(SSH_OPTIONS_HOST, "192.168.42.2");
     session.setOption(SSH_OPTIONS_PORT, 320);
     session.setOption(SSH_OPTIONS_USER, username.c_str());
@@ -123,7 +125,7 @@ int SSHConnection::deleteAccount(const std::string& username, const std::string&
     return result;
 }
 
-int SSHConnection::getCalendars(const std::string& username)
+int SSHConnection::getCalendars()
 {
     ssh_session currSession = session.getCSession();
     int rc;
@@ -145,7 +147,7 @@ int SSHConnection::getCalendars(const std::string& username)
     sftp_dir userDir;
     sftp_attributes attributes;
 
-    string userDirLoc = "/gudtimes/userfiles/" + username;
+    string userDirLoc = "/gudtimes/userfiles/" + session_user;
 
     userDir = sftp_opendir(sftpSession, userDirLoc.c_str());
 
