@@ -11,18 +11,22 @@
 #include <iostream>
 #include <fstream>
 #include <fcntl.h>
+#include <wx/filename.h>
 
 class SSHConnection
 {
     public:
         SSHConnection(const std::string& username,const std::string& password);
         ~SSHConnection();
-        int createAccount(const std::string& username, const std::string& password);
-        int deleteAccount(const std::string& username, const std::string& password);
-        int getCalendars(const std::string& username);
+        static int createAccount(const std::string& username, const std::string& password);
+        static int deleteAccount(const std::string& username, const std::string& password);
+        int getCalendars();
+        void uploadFile(wxFileName fileName);
+        void deleteFile(const std::string& fileName);
     protected:
     private:
         ssh::Session session;
+        std::string session_user;
 };
 
 class SSHException

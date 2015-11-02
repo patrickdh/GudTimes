@@ -4,27 +4,34 @@ using namespace std;
 
 SSHConnection::SSHConnection(const string& username, const string& password)
 {
-    if (username.length() == 0){
+    if (username.length() == 0)
+    {
         throw SSHException("Please enter a username");
     }
-    if (password.length() == 0){
+    if (password.length() == 0)
+    {
         throw SSHException("Please enter a password");
     }
 
-    session.setOption(SSH_OPTIONS_HOST, "192.168.42.2");
-    session.setOption(SSH_OPTIONS_PORT, 320);
-    session.setOption(SSH_OPTIONS_USER, username.c_str());
+    session_user = username;
 
-    try{
+    session.setOption(SSH_OPTIONS_HOST, "vm320stu-1.caslab.queensu.ca");
+    session.setOption(SSH_OPTIONS_PORT, 22);
+    session.setOption(SSH_OPTIONS_USER, session_user.c_str());
+
+    try
+    {
         session.connect();
     }
-    catch(ssh::SshException& e){
+    catch(ssh::SshException& e)
+    {
         throw SSHException("Could not connect to server");
     }
 
     int res = session.userauthPassword(password.c_str());
 
-    if (res != SSH_AUTH_SUCCESS){
+    if (res != SSH_AUTH_SUCCESS)
+    {
         throw SSHException("Invalid username or password");
     }
 }
@@ -36,32 +43,42 @@ SSHConnection::~SSHConnection()
 
 int SSHConnection::createAccount(const std::string& username, const std::string& password)
 {
-    if (username.length() == 0){
+    if (username.length() == 0)
+    {
         throw SSHException("Please enter a username");
     }
-    if (password.length() == 0){
+    if (password.length() == 0)
+    {
         throw SSHException("Please enter a password");
     }
-    if (username.find("\"") != string::npos){
+    if (username.find("\"") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (username.find(" ") != string::npos){
+    if (username.find(" ") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (password.find("\"") != string::npos){
+    if (password.find("\"") != string::npos)
+    {
+        throw SSHException("Illegal character in password");
+    }
+    if (password.find(" ") != string::npos)
+    {
         throw SSHException("Illegal character in password");
     }
 
+    SSHConnection scriptAccess("appuser","apppass");
+
     stringstream ss;
-    ss << "sudo /gudtimes/scripts/create_account.sh \"";
+    ss << "sudo /gudtimes/scripts/create_account.sh ";
     ss << username;
-    ss << "\" \"";
+    ss << " ";
     ss << password;
-    ss << "\"";
 
     const string commandString = ss.str();
 
-    ssh::Channel channel(session);
+    ssh::Channel channel(scriptAccess.session);
     channel.openSession();
     channel.requestExec(commandString.c_str());
     channel.sendEof();
@@ -73,32 +90,42 @@ int SSHConnection::createAccount(const std::string& username, const std::string&
 
 int SSHConnection::deleteAccount(const std::string& username, const std::string& password)
 {
-    if (username.length() == 0){
+    if (username.length() == 0)
+    {
         throw SSHException("Please enter a username");
     }
-    if (password.length() == 0){
+    if (password.length() == 0)
+    {
         throw SSHException("Please enter a password");
     }
-    if (username.find("\"") != string::npos){
+    if (username.find("\"") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (username.find(" ") != string::npos){
+    if (username.find(" ") != string::npos)
+    {
         throw SSHException("Illegal character in username");
     }
-    if (password.find("\"") != string::npos){
+    if (password.find("\"") != string::npos)
+    {
+        throw SSHException("Illegal character in password");
+    }
+    if (password.find(" ") != string::npos)
+    {
         throw SSHException("Illegal character in password");
     }
 
+    SSHConnection scriptAccess("appuser","apppass");
+
     stringstream ss;
-    ss << "sudo /gudtimes/scripts/delete_account.sh \"";
+    ss << "sudo /gudtimes/scripts/delete_account.sh ";
     ss << username;
-    ss << "\" \"";
+    ss << " ";
     ss << password;
-    ss << "\"";
 
     const string commandString = ss.str();
 
-    ssh::Channel channel(session);
+    ssh::Channel channel(scriptAccess.session);
     channel.openSession();
     channel.requestExec(commandString.c_str());
     channel.sendEof();
@@ -108,7 +135,7 @@ int SSHConnection::deleteAccount(const std::string& username, const std::string&
     return result;
 }
 
-int SSHConnection::getCalendars(const std::string& username)
+int SSHConnection::getCalendars()
 {
     ssh_session currSession = session.getCSession();
     int rc;
@@ -130,7 +157,7 @@ int SSHConnection::getCalendars(const std::string& username)
     sftp_dir userDir;
     sftp_attributes attributes;
 
-    string userDirLoc = "/gudtimes/userfiles/" + username;
+    string userDirLoc = "/" + session_user;
 
     userDir = sftp_opendir(sftpSession, userDirLoc.c_str());
 
@@ -180,7 +207,8 @@ int SSHConnection::getCalendars(const std::string& username)
                 {
                     break;
                 }
-                else if (nbytes < 0) {
+                else if (nbytes < 0)
+                {
                     sftp_close(file);
                     sftp_attributes_free(attributes);
                     sftp_closedir(userDir);
@@ -202,11 +230,11 @@ int SSHConnection::getCalendars(const std::string& username)
             outFile.close();
             if (outFile.fail())
             {
-                    sftp_close(file);
-                    sftp_attributes_free(attributes);
-                    sftp_closedir(userDir);
-                    sftp_free(sftpSession);
-                    throw SSHException("Error closing file (client)");
+                sftp_close(file);
+                sftp_attributes_free(attributes);
+                sftp_closedir(userDir);
+                sftp_free(sftpSession);
+                throw SSHException("Error closing file (client)");
             }
 
             rc = sftp_close(file);
@@ -226,7 +254,8 @@ int SSHConnection::getCalendars(const std::string& username)
     }
 
     rc = sftp_closedir(userDir);
-    if (rc != SSH_OK)  {
+    if (rc != SSH_OK)
+    {
         sftp_free(sftpSession);
         throw SSHException("Error closing user directory");
     }
@@ -236,6 +265,118 @@ int SSHConnection::getCalendars(const std::string& username)
     return numCalendars;
 }
 
+void SSHConnection::uploadFile(wxFileName fileName)
+{
+    ssh_session currSession = session.getCSession();
+    int rc;
+
+    sftp_session sftpSession = sftp_new(currSession);
+    if (sftpSession == NULL)
+    {
+        throw SSHException("Unable to allocate SFTP session");
+    }
+
+    rc = sftp_init(sftpSession);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to initialize SFTP session");
+    }
+
+    string userDirLoc = "/" + session_user;
+
+    int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+    sftp_file file;
+    int nwritten;
+
+    string filePath = userDirLoc + "/" + fileName.GetFullName().mb_str();
+
+    file = sftp_open(sftpSession, filePath.c_str(), access_type, S_IRWXU);
+    if (file == NULL)
+    {
+        string error(ssh_get_error(currSession));
+        sftp_free(sftpSession);
+        throw SSHException("Can't open file for writing (server)");
+    }
+
+    ifstream inFile(fileName.GetFullPath().mb_str());
+    if (inFile.fail())
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Can't open file for reading (client)");
+    }
+
+    stringstream ss;
+    ss << inFile.rdbuf();
+    string fileData = ss.str();
+
+    if (inFile.fail())
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error reading file");
+    }
+
+    nwritten = sftp_write(file,fileData.c_str(),fileData.length());
+
+    if ( (unsigned int)nwritten != fileData.length())
+    {
+        string error(ssh_get_error(currSession));
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error writing file");
+    }
+
+    inFile.close();
+    if (inFile.fail())
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error closing file (client)");
+    }
+
+    rc = sftp_close(file);
+    if (rc != SSH_OK)
+    {
+        throw SSHException("Error closing file (server)");
+    }
+
+    sftp_free(sftpSession);
+}
+
+void SSHConnection::deleteFile(const std::string& fileName)
+{
+    ssh_session currSession = session.getCSession();
+    int rc;
+
+    sftp_session sftpSession = sftp_new(currSession);
+    if (sftpSession == NULL)
+    {
+        throw SSHException("Unable to allocate SFTP session");
+    }
+
+    rc = sftp_init(sftpSession);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to initialize SFTP session");
+    }
+
+    string userDirLoc = "/" + session_user;
+
+    string filePath = userDirLoc + "/" + fileName;
+
+    rc = sftp_unlink(sftpSession, filePath.c_str());
+
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to delete file (server)");
+    }
+
+    sftp_free(sftpSession);
+}
 
 SSHException::SSHException(const string& error) : errorDescription(error) {}
 string SSHException::what()

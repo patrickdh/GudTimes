@@ -1,3 +1,8 @@
+// This file is nearly identical to the original provided by libssh,
+// however it has been modified to make the getCSession() accessor
+// public so it can be used for SFTP functions that aren't implemented
+// in this C++ wrapper.
+
 /*
  * This file is part of the SSH Library
  *
