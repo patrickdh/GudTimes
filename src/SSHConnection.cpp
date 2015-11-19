@@ -1,8 +1,20 @@
+#define MAX_XFER_BUF_SIZE 16384
+
+#include <libssh/sftp.h>
+
+#include <stdlib.h>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <fcntl.h>
+
 #include "SSHConnection.h"
 
 using namespace std;
 
-SSHConnection::SSHConnection(const string& username, const string& password)
+SSHConnection::SSHConnection(const std::string& username, const std::string& password)
 {
     if (username.length() == 0)
     {
@@ -378,8 +390,54 @@ void SSHConnection::deleteFile(const std::string& fileName)
     sftp_free(sftpSession);
 }
 
-SSHException::SSHException(const string& error) : errorDescription(error) {}
-string SSHException::what()
+SSHException::SSHException(const std::string& error) : errorDescription(error) {}
+
+std::string SSHException::what()
 {
     return errorDescription;
+}
+
+bool SSHConnection::doesUserExist(const std::string& username)
+{
+
+}
+
+void SSHConnection::findTimes(const std::string& currUser, const std::vector<std::string>& usersToSearch, int length)
+{
+
+}
+
+int SSHConnection::addURL(const std::string& url)
+{
+
+}
+
+void SSHConnection::getNotifications()
+{
+
+}
+
+void SSHConnection::getTimes()
+{
+
+}
+
+int SSHConnection::sendNotification(Notification notice, const std::vector<std::string>& usersToSend)
+{
+
+}
+
+int SSHConnection::sendNotification(Notification notice, const std::string& userToSend)
+{
+
+}
+
+UserNotFoundException::UserNotFoundException(const std::string& error)
+{
+
+}
+
+std::string UserNotFoundException::what()
+{
+
 }

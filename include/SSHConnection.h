@@ -1,17 +1,13 @@
 #pragma once
 
-#define MAX_XFER_BUF_SIZE 16384
-
+#include <wx/filename.h>
 
 #include "mylibsshpp.hpp"
-#include <libssh/sftp.h>
-#include <stdlib.h>
+
 #include <string>
-#include <sstream>
-#include <iostream>
-#include <fstream>
-#include <fcntl.h>
-#include <wx/filename.h>
+#include <vector>
+
+#include "Notification.h"
 
 class SSHConnection
 {
@@ -20,7 +16,14 @@ class SSHConnection
         ~SSHConnection();
         static int createAccount(const std::string& username, const std::string& password);
         static int deleteAccount(const std::string& username, const std::string& password);
+        static bool doesUserExist(const std::string& username);
+        static void findTimes(const std::string& currUser, const std::vector<std::string>& usersToSearch, int length);
+        int addURL (const std::string& url);
         int getCalendars();
+        void getNotifications();
+        void getTimes();
+        int sendNotification(Notification notice, const std::vector<std::string>& usersToSend);
+        int sendNotification(Notification notice, const std::string& userToSend);
         void uploadFile(wxFileName fileName);
         void deleteFile(const std::string& fileName);
     protected:
@@ -34,6 +37,17 @@ class SSHException
     public:
         SSHException(const std::string& error);
         std::string what();
+    protected:
+    private:
+        std::string errorDescription;
+};
+
+class UserNotFoundException
+{
+    public:
+        UserNotFoundException(const std::string& error);
+        std::string what();
+    protected:
     private:
         std::string errorDescription;
 };
