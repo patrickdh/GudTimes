@@ -13,7 +13,7 @@
 class ScheduleEventDialog : public SEDialog
 {
     public:
-        ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, std::string user);
+        ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, const std::string& user);
         Event getEvent();
         std::vector<std::string> getUsers();
     protected:

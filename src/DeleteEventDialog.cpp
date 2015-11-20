@@ -13,7 +13,7 @@
 
 using namespace std;
 
-DeleteEventDialog::DeleteEventDialog(wxWindow* parent, Calendar cal)
+DeleteEventDialog::DeleteEventDialog(wxWindow* parent, const Calendar& cal)
 : DEDialog(parent)
 {
     //ctor

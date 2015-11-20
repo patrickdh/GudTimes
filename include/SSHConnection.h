@@ -22,9 +22,9 @@ class SSHConnection
         int getCalendars();
         void getNotifications();
         void getTimes();
-        int sendNotification(Notification notice, const std::vector<std::string>& usersToSend);
-        int sendNotification(Notification notice, const std::string& userToSend);
-        void uploadFile(wxFileName fileName);
+        int sendNotification(const Notification& notice, const std::vector<std::string>& usersToSend);
+        int sendNotification(const Notification& notice, const std::string& userToSend);
+        void uploadFile(const wxFileName& fileName);
         void deleteFile(const std::string& fileName);
     protected:
     private:

@@ -13,7 +13,7 @@
 
 using namespace std;
 
-ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, std::string user)
+ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, const std::string& user)
 : SEDialog(parent)
 {
     //ctor

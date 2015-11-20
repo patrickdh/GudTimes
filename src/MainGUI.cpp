@@ -13,7 +13,7 @@
 
 using namespace std;
 
-MainGUI::MainGUI(wxWindow* parent, SSHConnection* sshconn, std::string user)
+MainGUI::MainGUI(wxWindow* parent, SSHConnection* sshconn, const std::string& user)
 : MainFrame(parent)
 {
     //ctor

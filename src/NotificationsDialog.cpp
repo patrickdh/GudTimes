@@ -13,7 +13,7 @@
 
 using namespace std;
 
-NotificationsDialog::NotificationsDialog(wxWindow* parent, std::vector<Notification> notices, std::string user)
+NotificationsDialog::NotificationsDialog(wxWindow* parent, const std::vector<Notification>& notices, const std::string& user)
 : NDialog(parent)
 {
     //ctor

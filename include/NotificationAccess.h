@@ -9,7 +9,7 @@ class NotificationAccess
 {
     public:
         NotificationAccess(SSHConnection* sshconn);
-        void clearNotifications(std::vector<int> indicesToClear);
+        void clearNotifications(const std::vector<int>& indicesToClear);
         static std::vector<Notification> readNotifications();
     protected:
     private:

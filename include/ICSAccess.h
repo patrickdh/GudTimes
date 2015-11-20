@@ -8,9 +8,9 @@
 class ICSAccess
 {
     public:
-        ICSAccess(std::string file);
+        ICSAccess(const std::string& file);
         std::vector<Event> getEvents();
-        void addEvent(Event eventToAdd);
+        void addEvent(const Event& eventToAdd);
         void deleteEvent(int indexToDelete);
         void deleteICS();
     protected:

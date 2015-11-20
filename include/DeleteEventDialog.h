@@ -9,7 +9,7 @@
 class DeleteEventDialog : public DEDialog
 {
     public:
-        DeleteEventDialog(wxWindow* parent, Calendar cal);
+        DeleteEventDialog(wxWindow* parent, const Calendar& cal);
         int getIndex();
     protected:
         void onOK(wxCommandEvent& event);

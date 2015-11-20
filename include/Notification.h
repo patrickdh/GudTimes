@@ -14,7 +14,7 @@ enum class NotificationTypeEnum
 class Notification
 {
     public:
-        Notification(std::string sender, NotificationTypeEnum noticeType, Event noticeEvent);
+        Notification(const std::string& sender, NotificationTypeEnum noticeType, const Event& noticeEvent);
         std::string getFrom();
         NotificationTypeEnum getType();
         Event getEvent();

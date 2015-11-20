@@ -277,7 +277,7 @@ int SSHConnection::getCalendars()
     return numCalendars;
 }
 
-void SSHConnection::uploadFile(wxFileName fileName)
+void SSHConnection::uploadFile(const wxFileName& fileName)
 {
     ssh_session currSession = session.getCSession();
     int rc;
@@ -422,12 +422,12 @@ void SSHConnection::getTimes()
 
 }
 
-int SSHConnection::sendNotification(Notification notice, const std::vector<std::string>& usersToSend)
+int SSHConnection::sendNotification(const Notification& notice, const std::vector<std::string>& usersToSend)
 {
 
 }
 
-int SSHConnection::sendNotification(Notification notice, const std::string& userToSend)
+int SSHConnection::sendNotification(const Notification& notice, const std::string& userToSend)
 {
 
 }

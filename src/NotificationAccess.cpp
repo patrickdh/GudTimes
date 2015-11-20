@@ -7,7 +7,7 @@ NotificationAccess::NotificationAccess(SSHConnection* sshconn)
     //ctor
 }
 
-void NotificationAccess::clearNotifications(std::vector<int> indicesToClear)
+void NotificationAccess::clearNotifications(const std::vector<int>& indicesToClear)
 {
 
 }

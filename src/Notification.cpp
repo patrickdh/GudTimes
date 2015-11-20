@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Notification::Notification(std::string sender, NotificationTypeEnum noticeType, Event noticeEvent)
+Notification::Notification(const std::string& sender, NotificationTypeEnum noticeType, const Event& noticeEvent)
 {
     //ctor
 }

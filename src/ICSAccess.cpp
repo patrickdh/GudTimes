@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ICSAccess::ICSAccess(std::string file)
+ICSAccess::ICSAccess(const std::string& file)
 {
 
 }
@@ -12,7 +12,7 @@ std::vector<Event> ICSAccess::getEvents()
 
 }
 
-void ICSAccess::addEvent(Event eventToAdd)
+void ICSAccess::addEvent(const Event& eventToAdd)
 {
 
 }

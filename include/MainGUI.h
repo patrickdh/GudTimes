@@ -13,7 +13,7 @@
 class MainGUI : public MainFrame
 {
     public:
-        MainGUI(wxWindow* parent, SSHConnection* sshconn, std::string user);
+        MainGUI(wxWindow* parent, SSHConnection* sshconn, const std::string& user);
     protected:
         void onClose(wxCloseEvent& event);
         void refreshButton(wxCommandEvent& event);
