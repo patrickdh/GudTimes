@@ -1,0 +1,5 @@
+# Ignore everything in this directory (since FormBuilder can generate files that should be moved to another directory if they are to be committed)
+*
+# Except this file and .fbp files
+!.gitignore
+!*.fbp
