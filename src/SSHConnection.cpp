@@ -204,7 +204,7 @@ int SSHConnection::getCalendars()
 
             string outName = "./data/" + name;
             ofstream outFile(outName.c_str());
-            if (outFile.fail())
+            if (!outFile)
             {
                 sftp_close(file);
                 sftp_attributes_free(attributes);
@@ -230,7 +230,7 @@ int SSHConnection::getCalendars()
                 }
 
                 outFile.write(buffer,nbytes);
-                if (outFile.fail())
+                if (!outFile)
                 {
                     sftp_close(file);
                     sftp_attributes_free(attributes);
@@ -241,7 +241,7 @@ int SSHConnection::getCalendars()
             }
 
             outFile.close();
-            if (outFile.fail())
+            if (!outFile)
             {
                 sftp_close(file);
                 sftp_attributes_free(attributes);
@@ -316,7 +316,7 @@ void SSHConnection::uploadFile(const wxFileName& fileName)
     }
 
     ifstream inFile(fileName.GetFullPath().mb_str());
-    if (inFile.fail())
+    if (!inFile)
     {
         sftp_close(file);
         sftp_free(sftpSession);
@@ -327,7 +327,7 @@ void SSHConnection::uploadFile(const wxFileName& fileName)
     ss << inFile.rdbuf();
     string fileData = ss.str();
 
-    if (inFile.fail())
+    if (!inFile)
     {
         sftp_close(file);
         sftp_free(sftpSession);
@@ -345,7 +345,7 @@ void SSHConnection::uploadFile(const wxFileName& fileName)
     }
 
     inFile.close();
-    if (inFile.fail())
+    if (!inFile)
     {
         sftp_close(file);
         sftp_free(sftpSession);
