@@ -390,7 +390,8 @@ void SSHConnection::deleteFile(const std::string& fileName)
     sftp_free(sftpSession);
 }
 
-SSHException::SSHException(const std::string& error) : errorDescription(error) {}
+SSHException::SSHException(const std::string& error)
+: errorDescription(error) {}
 
 std::string SSHException::what()
 {
@@ -433,11 +434,9 @@ int SSHConnection::sendNotification(const Notification& notice, const std::strin
 }
 
 UserNotFoundException::UserNotFoundException(const std::string& error)
-{
-
-}
+: errorDescription(error) {}
 
 std::string UserNotFoundException::what()
 {
-
+    return errorDescription;
 }
