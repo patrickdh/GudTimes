@@ -428,32 +428,329 @@ bool SSHConnection::doesUserExist(const std::string& username)
 
 int SSHConnection::findTimes(const std::vector<std::string>& usersToSearch, int length)
 {
+    string outName = "./data/";
+    outName += "userslist.txt";
+    ofstream outFile(outName.c_str());
+    if (!outFile)
+    {
+        throw SSHException("Error opening file (client)");
+    }
 
+    for (unsigned int i = 0; i < usersToSearch.size() ; i++)
+    {
+        outFile << usersToSearch.at(i) << endl;
+    }
+
+    if (!outFile)
+    {
+        throw SSHException("Error writing file (client)");
+    }
+
+    outFile.close();
+
+    wxFileName file;
+    file.AssignCwd();
+    file.AppendDir(_("data"));
+    file.SetFullName(_("userslist.txt"));
+
+    uploadFile(file);
+
+    SSHConnection scriptAccess("appuser","apppass");
+
+    stringstream ss;
+    ss << "sudo /gudtimes/scripts/find_times.sh ";
+    ss << session_user;
+    ss << " ";
+    ss << length;
+
+    const string commandString = ss.str();
+
+    ssh::Channel channel(scriptAccess.session);
+    channel.openSession();
+    channel.requestExec(commandString.c_str());
+    channel.sendEof();
+    while (channel.getExitStatus() == -1);
+    int result = channel.getExitStatus();
+    channel.close();
+
+    deleteFile("userslist.txt");
+    remove("./data/userslist.txt");
+
+    return result;
 }
 
 int SSHConnection::addURL(const std::string& url)
 {
+    string outName = "./data/";
+    outName += "urladd.txt";
+    ofstream outFile(outName.c_str());
+    if (!outFile)
+    {
+        throw SSHException("Error opening file (client)");
+    }
 
+    outFile << url;
+
+    if (!outFile)
+    {
+        throw SSHException("Error writing file (client)");
+    }
+
+    outFile.close();
+
+    wxFileName file;
+    file.AssignCwd();
+    file.AppendDir(_("data"));
+    file.SetFullName(_("urladd.txt"));
+
+    uploadFile(file);
+
+    SSHConnection scriptAccess("appuser","apppass");
+
+    stringstream ss;
+    ss << "sudo /gudtimes/scripts/add_url.sh ";
+    ss << session_user;
+
+    const string commandString = ss.str();
+
+    ssh::Channel channel(scriptAccess.session);
+    channel.openSession();
+    channel.requestExec(commandString.c_str());
+    channel.sendEof();
+    while (channel.getExitStatus() == -1);
+    int result = channel.getExitStatus();
+    channel.close();
+
+    deleteFile("urladd.txt");
+    remove("./data/urladd.txt");
+
+    return result;
 }
 
 void SSHConnection::getNotifications()
 {
+    ssh_session currSession = session.getCSession();
+    int rc;
 
+    sftp_session sftpSession = sftp_new(currSession);
+    if (sftpSession == NULL)
+    {
+        throw SSHException("Unable to allocate SFTP session");
+    }
+
+    rc = sftp_init(sftpSession);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to initialize SFTP session");
+    }
+
+    string notifyFileLoc = "/" + session_user + "/notify.txt";
+
+    int access_type = O_RDONLY;
+    sftp_file file;
+    char buffer[MAX_XFER_BUF_SIZE];
+    int nbytes;
+
+    file = sftp_open(sftpSession, notifyFileLoc.c_str(), access_type, 0);
+    if (file == NULL)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Error opening file (server)");
+    }
+
+    string outName = "./data/notify.txt";
+    ofstream outFile(outName.c_str());
+    if (!outFile)
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error opening file (client)");
+    }
+
+    while (1)
+    {
+        nbytes = sftp_read(file,buffer,sizeof(buffer));
+        if (nbytes == 0)
+        {
+            break;
+        }
+        else if (nbytes < 0)
+        {
+            sftp_close(file);
+            sftp_free(sftpSession);
+            throw SSHException("Error reading file");
+        }
+
+        outFile.write(buffer,nbytes);
+        if (!outFile)
+        {
+            sftp_close(file);
+            sftp_free(sftpSession);
+            throw SSHException("Error writing file");
+        }
+    }
+
+    outFile.close();
+    if (!outFile)
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error closing file (client)");
+    }
+
+    rc = sftp_close(file);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Error closing file (server)");
+    }
+
+    sftp_free(sftpSession);
 }
 
 void SSHConnection::getTimes()
 {
+    ssh_session currSession = session.getCSession();
+    int rc;
 
+    sftp_session sftpSession = sftp_new(currSession);
+    if (sftpSession == NULL)
+    {
+        throw SSHException("Unable to allocate SFTP session");
+    }
+
+    rc = sftp_init(sftpSession);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Unable to initialize SFTP session");
+    }
+
+    string notifyFileLoc = "/" + session_user + "/found_times.txt";
+
+    int access_type = O_RDONLY;
+    sftp_file file;
+    char buffer[MAX_XFER_BUF_SIZE];
+    int nbytes;
+
+    file = sftp_open(sftpSession, notifyFileLoc.c_str(), access_type, 0);
+    if (file == NULL)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Error opening file (server)");
+    }
+
+    string outName = "./data/found_times.txt";
+    ofstream outFile(outName.c_str());
+    if (!outFile)
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error opening file (client)");
+    }
+
+    while (1)
+    {
+        nbytes = sftp_read(file,buffer,sizeof(buffer));
+        if (nbytes == 0)
+        {
+            break;
+        }
+        else if (nbytes < 0)
+        {
+            sftp_close(file);
+            sftp_free(sftpSession);
+            throw SSHException("Error reading file");
+        }
+
+        outFile.write(buffer,nbytes);
+        if (!outFile.good())
+        {
+            sftp_close(file);
+            sftp_free(sftpSession);
+            throw SSHException("Error writing file");
+        }
+    }
+
+    outFile.close();
+    if (!outFile)
+    {
+        sftp_close(file);
+        sftp_free(sftpSession);
+        throw SSHException("Error closing file (client)");
+    }
+
+    rc = sftp_close(file);
+    if (rc != SSH_OK)
+    {
+        sftp_free(sftpSession);
+        throw SSHException("Error closing file (server)");
+    }
+
+    sftp_free(sftpSession);
 }
 
 int SSHConnection::sendNotification(const Notification& notice, const std::vector<std::string>& usersToSend)
 {
+    string outName = "./data/";
+    outName += "outboundNotices.txt";
+    ofstream outFile(outName.c_str());
+    if (!outFile)
+    {
+        throw SSHException("Error opening file (client)");
+    }
 
+    for (unsigned int i = 0; i < usersToSend.size() ; i++)
+    {
+        outFile << usersToSend.at(i) << ";" << (int) notice.getType() << ";" << notice.getEvent().getTitle()
+                << ";" << notice.getEvent().getStart().FormatISODate()
+                << ";" << notice.getEvent().getStart().FormatISOTime()
+                << ";" << notice.getEvent().getEnd().FormatISODate()
+                << ";" << notice.getEvent().getEnd().FormatISOTime() << endl;
+    }
+
+    if (!outFile)
+    {
+        throw SSHException("Error writing file (client)");
+    }
+
+    outFile.close();
+
+    wxFileName file;
+    file.AssignCwd();
+    file.AppendDir(_("data"));
+    file.SetFullName(_("outboundNotices.txt"));
+
+    uploadFile(file);
+
+    SSHConnection scriptAccess("appuser","apppass");
+
+    stringstream ss;
+    ss << "sudo /gudtimes/scripts/notify.sh ";
+    ss << session_user;
+
+    const string commandString = ss.str();
+
+    ssh::Channel channel(scriptAccess.session);
+    channel.openSession();
+    channel.requestExec(commandString.c_str());
+    channel.sendEof();
+    while (channel.getExitStatus() == -1);
+    int result = channel.getExitStatus();
+    channel.close();
+
+    deleteFile("outboundNotices.txt");
+    remove("./data/outboundNotices.txt");
+
+    return result;
 }
 
 int SSHConnection::sendNotification(const Notification& notice, const std::string& userToSend)
 {
-
+    vector<string> temp;
+    temp.push_back(userToSend);
+    return sendNotification(notice, temp);
 }
 
 UserNotFoundException::UserNotFoundException(const std::string& error)
