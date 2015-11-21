@@ -19,12 +19,12 @@ ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshcon
     //ctor
 }
 
-Event ScheduleEventDialog::getEvent()
+Event ScheduleEventDialog::getEvent() const
 {
 
 }
 
-std::vector<std::string> ScheduleEventDialog::getUsers()
+std::vector<std::string> ScheduleEventDialog::getUsers() const
 {
 
 }

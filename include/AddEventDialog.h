@@ -10,7 +10,7 @@ class AddEventDialog : public AEDialog
 {
     public:
         AddEventDialog(wxWindow* parent);
-        Event getEvent();
+        Event getEvent() const;
     protected:
         void onOK(wxCommandEvent& event);
         void onCancel(wxCommandEvent& event);

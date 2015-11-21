@@ -19,7 +19,7 @@ DeleteEventDialog::DeleteEventDialog(wxWindow* parent, const Calendar& cal)
     //ctor
 }
 
-int DeleteEventDialog::getIndex()
+int DeleteEventDialog::getIndex() const
 {
 
 }

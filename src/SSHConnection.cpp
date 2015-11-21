@@ -392,7 +392,7 @@ void SSHConnection::deleteFile(const std::string& fileName)
 
 SSHException::SSHException(const std::string& error) : errorDescription(error) {}
 
-std::string SSHException::what()
+std::string SSHException::what() const
 {
     return errorDescription;
 }
@@ -437,7 +437,7 @@ UserNotFoundException::UserNotFoundException(const std::string& error)
 
 }
 
-std::string UserNotFoundException::what()
+std::string UserNotFoundException::what() const
 {
 
 }

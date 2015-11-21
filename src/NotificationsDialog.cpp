@@ -19,17 +19,17 @@ NotificationsDialog::NotificationsDialog(wxWindow* parent, const std::vector<Not
     //ctor
 }
 
-std::vector<int> NotificationsDialog::getClearedNotifications()
+std::vector<int> NotificationsDialog::getClearedNotifications() const
 {
 
 }
 
-std::vector<Event> NotificationsDialog::getEvents()
+std::vector<Event> NotificationsDialog::getEvents() const
 {
 
 }
 
-std::vector<std::pair<Notification,std::string>> NotificationsDialog::getOutgoingNotifications()
+std::vector<std::pair<Notification,std::string>> NotificationsDialog::getOutgoingNotifications() const
 {
 
 }

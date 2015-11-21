@@ -22,7 +22,7 @@ class FileNotFoundException
 {
     public:
         FileNotFoundException(const std::string& errorMessage);
-        std::string what();
+        std::string what() const;
     protected:
     private:
         std::string errorDescription;

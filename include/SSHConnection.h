@@ -36,7 +36,7 @@ class SSHException
 {
     public:
         SSHException(const std::string& error);
-        std::string what();
+        std::string what() const;
     protected:
     private:
         std::string errorDescription;
@@ -46,7 +46,7 @@ class UserNotFoundException
 {
     public:
         UserNotFoundException(const std::string& error);
-        std::string what();
+        std::string what() const;
     protected:
     private:
         std::string errorDescription;

@@ -32,7 +32,7 @@ FileNotFoundException::FileNotFoundException(const std::string& errorMessage)
 
 }
 
-std::string FileNotFoundException::what()
+std::string FileNotFoundException::what() const
 {
 
 }

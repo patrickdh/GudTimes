@@ -19,7 +19,7 @@ AddEventDialog::AddEventDialog(wxWindow* parent)
     //ctor
 }
 
-Event AddEventDialog::getEvent()
+Event AddEventDialog::getEvent() const
 {
 
 }

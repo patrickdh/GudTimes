@@ -13,9 +13,9 @@ class Calendar
         void addEvent(const Event& event);
         void deleteEvent(int indexToDelete);
         void deleteCalendar();
-        std::string getFileName();
-        std::vector<Event> getEvents();
-        bool getIsEditable();
+        std::string getFileName() const;
+        std::vector<Event> getEvents() const;
+        bool getIsEditable() const;
     protected:
     private:
         ICSAccess ics;
@@ -28,7 +28,7 @@ class ReadOnlyException
 {
     public:
         ReadOnlyException(const std::string& error);
-        std::string what();
+        std::string what() const;
     protected:
     private:
         std::string errorDescription;

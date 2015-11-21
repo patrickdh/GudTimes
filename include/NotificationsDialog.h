@@ -15,9 +15,9 @@ class NotificationsDialog : public NDialog
 {
     public:
         NotificationsDialog(wxWindow* parent, const std::vector<Notification>& notices, const std::string& user);
-        std::vector<int> getClearedNotifications();
-        std::vector<Event> getEvents();
-        std::vector<std::pair<Notification,std::string>> getOutgoingNotifications();
+        std::vector<int> getClearedNotifications() const;
+        std::vector<Event> getEvents() const;
+        std::vector<std::pair<Notification,std::string>> getOutgoingNotifications() const;
     protected:
         void onAcceptButton(wxCommandEvent& event);
         void onDeclineButton(wxCommandEvent& event);

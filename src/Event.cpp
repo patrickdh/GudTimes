@@ -17,32 +17,32 @@ Event::Event(const std::string& eventTitle, const wxDateTime& start, const wxDat
 
 }
 
-std::string Event::getTitle()
+std::string Event::getTitle() const
 {
 
 }
 
-wxDateTime Event::getStart()
+wxDateTime Event::getStart() const
 {
 
 }
 
-wxDateTime Event::getEnd()
+wxDateTime Event::getEnd() const
 {
 
 }
 
-FrequencyEnum Event::getFrequency()
+FrequencyEnum Event::getFrequency() const
 {
 
 }
 
-int Event::getRepeatCount()
+int Event::getRepeatCount() const
 {
 
 }
 
-bool Event::isValid()
+bool Event::isValid() const
 {
 
 }

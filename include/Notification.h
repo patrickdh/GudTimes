@@ -15,9 +15,9 @@ class Notification
 {
     public:
         Notification(const std::string& sender, NotificationTypeEnum noticeType, const Event& noticeEvent);
-        std::string getFrom();
-        NotificationTypeEnum getType();
-        Event getEvent();
+        std::string getFrom() const;
+        NotificationTypeEnum getType() const;
+        Event getEvent() const;
     protected:
     private:
         std::string from;

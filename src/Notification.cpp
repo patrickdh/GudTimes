@@ -7,17 +7,17 @@ Notification::Notification(const std::string& sender, NotificationTypeEnum notic
     //ctor
 }
 
-std::string Notification::getFrom()
+std::string Notification::getFrom() const
 {
 
 }
 
-NotificationTypeEnum Notification::getType()
+NotificationTypeEnum Notification::getType() const
 {
 
 }
 
-Event Notification::getEvent()
+Event Notification::getEvent() const
 {
 
 }
