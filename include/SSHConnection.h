@@ -18,7 +18,7 @@ class SSHConnection
         static int deleteAccount(const std::string& username, const std::string& password);
         static bool doesUserExist(const std::string& username);
         int addURL (const std::string& url);
-        void findTimes(const std::vector<std::string>& usersToSearch, int length);
+        int findTimes(const std::vector<std::string>& usersToSearch, int length);
         int getCalendars();
         void getNotifications();
         void getTimes();

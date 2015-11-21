@@ -402,7 +402,7 @@ bool SSHConnection::doesUserExist(const std::string& username)
 
 }
 
-void SSHConnection::findTimes(const std::string& currUser, const std::vector<std::string>& usersToSearch, int length)
+int SSHConnection::findTimes(const std::vector<std::string>& usersToSearch, int length)
 {
 
 }
