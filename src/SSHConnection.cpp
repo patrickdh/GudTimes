@@ -400,7 +400,26 @@ std::string SSHException::what()
 
 bool SSHConnection::doesUserExist(const std::string& username)
 {
+    SSHConnection scriptAccess("appuser","apppass");
 
+    stringstream ss;
+    ss << "sudo /gudtimes/scripts/check_account.sh ";
+    ss << username;
+
+    const string commandString = ss.str();
+
+    ssh::Channel channel(scriptAccess.session);
+    channel.openSession();
+    channel.requestExec(commandString.c_str());
+    channel.sendEof();
+    while (channel.getExitStatus() == -1);
+    int result = channel.getExitStatus();
+    channel.close();
+
+    if (result == 1)
+        return true;        // User exists
+    else
+        return false;       // User not found, or invalid input
 }
 
 void SSHConnection::findTimes(const std::string& currUser, const std::vector<std::string>& usersToSearch, int length)
