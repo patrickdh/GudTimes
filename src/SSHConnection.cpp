@@ -206,6 +206,7 @@ int SSHConnection::getCalendars()
             ofstream outFile(outName.c_str());
             if (outFile.fail())
             {
+                sftp_close(file);
                 sftp_attributes_free(attributes);
                 sftp_closedir(userDir);
                 sftp_free(sftpSession);
@@ -252,6 +253,9 @@ int SSHConnection::getCalendars()
             rc = sftp_close(file);
             if (rc != SSH_OK)
             {
+                sftp_attributes_free(attributes);
+                sftp_closedir(userDir);
+                sftp_free(sftpSession);
                 throw SSHException("Error closing file (server)");
             }
         }
