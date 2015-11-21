@@ -23,17 +23,17 @@ void Calendar::deleteCalendar()
 
 }
 
-std::string Calendar::getFileName()
+std::string Calendar::getFileName() const
 {
 
 }
 
-std::vector<Event> Calendar::getEvents()
+std::vector<Event> Calendar::getEvents() const
 {
 
 }
 
-bool Calendar::getIsEditable()
+bool Calendar::getIsEditable() const
 {
 
 }
@@ -43,7 +43,7 @@ ReadOnlyException::ReadOnlyException(const std::string& error)
 
 }
 
-std::string ReadOnlyException::what()
+std::string ReadOnlyException::what() const
 {
 
 }

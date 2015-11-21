@@ -393,7 +393,7 @@ void SSHConnection::deleteFile(const std::string& fileName)
 SSHException::SSHException(const std::string& error)
 : errorDescription(error) {}
 
-std::string SSHException::what()
+std::string SSHException::what() const
 {
     return errorDescription;
 }
@@ -422,7 +422,7 @@ bool SSHConnection::doesUserExist(const std::string& username)
         return false;       // User not found, or invalid input
 }
 
-void SSHConnection::findTimes(const std::string& currUser, const std::vector<std::string>& usersToSearch, int length)
+int SSHConnection::findTimes(const std::vector<std::string>& usersToSearch, int length)
 {
 
 }
@@ -455,7 +455,7 @@ int SSHConnection::sendNotification(const Notification& notice, const std::strin
 UserNotFoundException::UserNotFoundException(const std::string& error)
 : errorDescription(error) {}
 
-std::string UserNotFoundException::what()
+std::string UserNotFoundException::what() const
 {
     return errorDescription;
 }

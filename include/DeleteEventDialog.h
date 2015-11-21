@@ -10,7 +10,7 @@ class DeleteEventDialog : public DEDialog
 {
     public:
         DeleteEventDialog(wxWindow* parent, const Calendar& cal);
-        int getIndex();
+        int getIndex() const;
     protected:
         void onOK(wxCommandEvent& event);
         void onCancel(wxCommandEvent& event);

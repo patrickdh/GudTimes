@@ -14,8 +14,8 @@ class ScheduleEventDialog : public SEDialog
 {
     public:
         ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, const std::string& user);
-        Event getEvent();
-        std::vector<std::string> getUsers();
+        Event getEvent() const;
+        std::vector<std::string> getUsers() const;
     protected:
         void onChange(wxCommandEvent& event);
         void onFindTimes(wxCommandEvent& event);

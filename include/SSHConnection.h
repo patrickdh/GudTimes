@@ -17,8 +17,8 @@ class SSHConnection
         static int createAccount(const std::string& username, const std::string& password);
         static int deleteAccount(const std::string& username, const std::string& password);
         static bool doesUserExist(const std::string& username);
-        static void findTimes(const std::string& currUser, const std::vector<std::string>& usersToSearch, int length);
         int addURL (const std::string& url);
+        int findTimes(const std::vector<std::string>& usersToSearch, int length);
         int getCalendars();
         void getNotifications();
         void getTimes();
@@ -36,7 +36,7 @@ class SSHException
 {
     public:
         SSHException(const std::string& error);
-        std::string what();
+        std::string what() const;
     protected:
     private:
         std::string errorDescription;
@@ -46,7 +46,7 @@ class UserNotFoundException
 {
     public:
         UserNotFoundException(const std::string& error);
-        std::string what();
+        std::string what() const;
     protected:
     private:
         std::string errorDescription;
