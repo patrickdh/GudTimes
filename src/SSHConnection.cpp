@@ -749,7 +749,8 @@ int SSHConnection::sendNotification(const Notification& notice, const std::vecto
 
     for (unsigned int i = 0; i < usersToSend.size() ; i++)
     {
-        outFile << usersToSend.at(i) << ";" << (int) notice.getType() << ";" << notice.getEvent().getTitle()
+        outFile << usersToSend.at(i) << ";" << notice.getFrom()
+                << ";" << (int) notice.getType() << ";" << notice.getEvent().getTitle()
                 << ";" << notice.getEvent().getStart().FormatISODate()
                 << ";" << notice.getEvent().getStart().FormatISOTime()
                 << ";" << notice.getEvent().getEnd().FormatISODate()
