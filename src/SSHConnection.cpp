@@ -432,12 +432,3 @@ int SSHConnection::sendNotification(const Notification& notice, const std::strin
 
 }
 
-UserNotFoundException::UserNotFoundException(const std::string& error)
-{
-
-}
-
-std::string UserNotFoundException::what() const
-{
-
-}
