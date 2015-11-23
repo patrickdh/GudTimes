@@ -799,11 +799,3 @@ int SSHConnection::sendNotification(const Notification& notice, const std::strin
     temp.push_back(userToSend);
     return sendNotification(notice, temp);
 }
-
-UserNotFoundException::UserNotFoundException(const std::string& error)
-: errorDescription(error) {}
-
-std::string UserNotFoundException::what() const
-{
-    return errorDescription;
-}
