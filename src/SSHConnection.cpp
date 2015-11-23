@@ -432,7 +432,6 @@ void SSHConnection::deleteFile(const std::string& fileName)
         channel.requestExec(commandString.c_str());
         channel.sendEof();
         while (channel.getExitStatus() == -1);
-        int result = channel.getExitStatus();
         channel.close();
 
         deleteFile("urldel.txt");
