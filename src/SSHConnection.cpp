@@ -392,6 +392,52 @@ void SSHConnection::deleteFile(const std::string& fileName)
     }
 
     sftp_free(sftpSession);
+
+    if (fileName.compare(0,3,"ro_") == 0)
+    {
+        string outName = "./data/";
+        outName += "urldel.txt";
+        ofstream outFile(outName.c_str());
+        if (!outFile)
+        {
+            throw SSHException("Error opening file (client)");
+        }
+
+        outFile << fileName.substr(3) << endl;
+
+        if (!outFile)
+        {
+            throw SSHException("Error writing file (client)");
+        }
+
+        outFile.close();
+
+        wxFileName file;
+        file.AssignCwd();
+        file.AppendDir(_("data"));
+        file.SetFullName(_("urldel.txt"));
+
+        uploadFile(file);
+
+        SSHConnection scriptAccess("appuser","apppass");
+
+        stringstream ss;
+        ss << "sudo /gudtimes/scripts/delete_url.sh ";
+        ss << session_user;
+
+        const string commandString = ss.str();
+
+        ssh::Channel channel(scriptAccess.session);
+        channel.openSession();
+        channel.requestExec(commandString.c_str());
+        channel.sendEof();
+        while (channel.getExitStatus() == -1);
+        int result = channel.getExitStatus();
+        channel.close();
+
+        deleteFile("urldel.txt");
+        remove("./data/urldel.txt");
+    }
 }
 
 SSHException::SSHException(const std::string& error)
