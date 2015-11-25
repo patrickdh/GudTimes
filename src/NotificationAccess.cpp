@@ -16,8 +16,10 @@ void NotificationAccess::clearNotifications(std::vector<int> indicesToClear)
 {
     connection->getNotifications();
     vector<Notification> notices = readNotifications();
-    sort (indicesToClear.begin(), indicesToClear.end(), greater<int>());
-    indicesToClear.erase( unique(indicesToClear.begin(), indicesToClear.end()), indicesToClear.end());
+    // Sorting removed as algorithm now relies on indicies being based on the list with all previous
+    // deletions already processed.
+    //sort (indicesToClear.begin(), indicesToClear.end(), greater<int>());
+    //indicesToClear.erase( unique(indicesToClear.begin(), indicesToClear.end()), indicesToClear.end());
     for (unsigned int i = 0; i < indicesToClear.size() ; ++i)
     {
         notices.erase(notices.begin()+indicesToClear.at(i));
@@ -68,7 +70,7 @@ std::vector<Notification> NotificationAccess::readNotifications()
         typess << type;
         typess >> typenum;
 
-        if (!ss)
+        if (!typess)
         {
             throw NotificationException("Invalid notification file data (notice type)");
         }
