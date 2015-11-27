@@ -5,6 +5,7 @@
 #include <fstream>
 #include <ostream>
 #include <istream>
+#include <sstream>
 
 #include "wx/arrstr.h"
 #include "Calendar.h"
@@ -19,7 +20,7 @@ void searchTimeSlotMonthly(Event event, bool (&table)[24][4], int month, int day
 void searchTimeSlotWeekly(Event event, bool (&table)[24][4], int month, int day, int year);
 void searchTimeSlotDaily(Event event, bool (&table)[24][4], int month, int day, int year);
 void searchTimeSlot(vector<Event> events, int duration, int day, int month, int year);
-void generateTimeRange (vector<wxDateTime> vt, int duration);
+wxArrayString generateTimeRange (vector<wxDateTime> vt, int duration);
 vector<wxDateTime> findValidSlots(bool table[24][4], int duration, wxDateTime::Month month, int day, int year);
 void printTable(bool table[24][4]);
 bool dateComparison(wxDateTime, wxDateTime);
@@ -30,8 +31,22 @@ bool orderStartTime(int start1, int start2){
     return (start1 < start2);
 }
 
-int main()
+int main(int argc, char** argv)
 {
+    stringstream ss;
+
+    ss << argv[1];
+    string PATH;
+    ss >> PATH;
+
+    ss << argv[2];
+    int duration;
+    ss >> day;
+
+    ss << argv[3];
+    string dateString;
+    ss >> dateString;
+
     vector<Event> events;
     /* Test Case Event Times */
         wxDateTime bufferStart(11, wxDateTime::Sep, 2015, 0);
@@ -74,6 +89,7 @@ void searchTimeSlot(vector<Event> events, int duration, int day, int month, int 
     FrequencyEnum frequency;
     wxDateTime startDT, endDT;
     vector<wxDateTime> validTimes;
+    wxArrayString generatedTimes;
     bool freeTimeTable[24][4];
     bool setMinute;
 
@@ -138,9 +154,9 @@ void searchTimeSlot(vector<Event> events, int duration, int day, int month, int 
         output << freeSlots << '\n';
         for (i = 0; i < validTimes.size(); i++){
             if (i%2 == 0)
-                output << validTimes[i].FormatISODate() << ';' << validTimes[i].FormatISOTime() << ';';
+                output << validTimes[i].FormatISOTime() << ';';
             else
-                output << validTimes[i].FormatISODate() << ';' << validTimes[i].FormatISOTime() << '\n';
+                output << validTimes[i].FormatISOTime() << '\n';
         }
     }
 
@@ -156,7 +172,8 @@ void searchTimeSlot(vector<Event> events, int duration, int day, int month, int 
     if (validTimes.empty())
         cout << "No times available" << endl;
     else
-        generateTimeRange(validTimes, duration);
+        generatedTimes = generateTimeRange(validTimes, duration);
+
 }
 
 void searchTimeSlotAnnually(Event event, bool (&table)[24][4], int day, int month, int year){
@@ -401,10 +418,11 @@ int calcFreeSlots(bool table[24][4]){
     return freeSlots;
 }
 
-void generateTimeRange (vector<wxDateTime> vt, int duration){
+wxArrayString generateTimeRange (vector<wxDateTime> vt, int duration){
     int i;
     int sMin, eMin;
     int sHour, eHour;
+    int cHour, cMin;
     int hourAdjust, minuteAdjust;
     wxDateTime bufferDT(0,0,0);
     wxDateTime dt1, dt2;
@@ -412,7 +430,6 @@ void generateTimeRange (vector<wxDateTime> vt, int duration){
     wxArrayString listItems;
     wxString buffer, b1, b2, b3, b4;
 
-    int cHour, cMin;
     for (i = 0; i < vt.size(); i+=2){
         sMin = vt[i].GetMinute() + vt[i].GetHour()*60;
         eMin = vt[i+1].GetMinute() + vt[i+1].GetHour()*60;
@@ -439,22 +456,14 @@ void generateTimeRange (vector<wxDateTime> vt, int duration){
             listItems.Add(buffer);
 
             buffer.clear();
-            //cout << vt[i].GetHour() << ":" << vt[i].GetMinute() << " to " << (vt[i].GetHour() + hourAdjust) << ":" << (vt[i].GetMinute() + minuteAdjust) << endl;
+
             vt[i].SetMinute((vt[i].GetMinute() + 15) % 60);
             if (vt[i].GetMinute() == 0)
                 vt[i].SetHour(vt[i].GetHour() + 1);
             cMin += 15;
         }
     }
-
-    dt1.ParseTime(vt[0].FormatISOTime());
-    cout << dt1.FormatISOTime() << endl;
-    b1 = listItems[0].SubString(0,1);
-    b2 = listItems[0].SubString(3,4);
-    b3 = listItems[0].SubString(9,10);
-    b4 = listItems[0].SubString(12,13);
-    cout << b1 << ":" << b2 << " to " << b3 << ":" <<b4<< endl;
-    //eventChoiceList.InsertItems(listIteams());
+    return listItems;
 }
 
 int endMinuteToIndexConversion(int minutes){
