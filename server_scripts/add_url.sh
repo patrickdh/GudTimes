@@ -9,7 +9,7 @@ url=$(head -n 1 /gudtimes/userfiles/$user/urladd.txt)
 
 name=$(basename $url)
 
-if [ -f /gudtimes/userfiles/$user/$name ]; then
+if [ -f /gudtimes/userfiles/$user/ro_$name ]; then
 	echo "File with this name already exists"
 	exit 4
 fi
@@ -23,9 +23,13 @@ curl $url --insecure --silent > /gudtimes/userfiles/$user/ro_$name
 
 if [ $? -ne 0 ]; then
 	echo "Download failed"
-	rm -f /gudtimes/userfiles/$user/$name
+	rm -f /gudtimes/userfiles/$user/ro_$name
 	exit 1
 fi
+
+chown $user /gudtimes/userfiles/$user/ro_$name
+chgrp $user /gudtimes/userfiles/$user/ro_$name
+chmod 700 /gudtimes/userfiles/$user/ro_$name
 
 echo "$user;$url" >> /gudtimes/serverfiles/urlfetchlist.txt
 
