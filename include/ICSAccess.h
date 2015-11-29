@@ -5,6 +5,10 @@
 
 #include "Event.h"
 
+enum class Component{
+    VCALENDAR, VEVENT
+};
+
 class ICSAccess
 {
     public:
@@ -16,9 +20,9 @@ class ICSAccess
     protected:
     private:
         std::string filename;
-        int untilToCount(const string& firstTime, const string& freq, const string& lastTime) const;
-        std::string getProperty(const string &Line) const;
-        std::string getSubProperty(const string &Line, const char *SubProperty) const;
+        int untilToCount(const std::string& firstTime, const std::string& freq, const std::string& lastTime) const;
+        std::string getProperty(const std::string &Line) const;
+        std::string getSubProperty(const std::string &Line, const char *SubProperty) const;
 
 };
 

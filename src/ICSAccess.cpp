@@ -25,7 +25,7 @@ ICSAccess::ICSAccess(const string& filepath)
 
 vector<Event> ICSAccess::getEvents(){
 	string Line, NextLine;
-	Component CurrentComponent = VCALENDAR, PrevComponent = VCALENDAR;
+	Component CurrentComponent = Component::VCALENDAR, PrevComponent = Component::VCALENDAR;
 	string summary, eventStart, eventEnd, UID, prevUID;
 	string freq, until;
 	int rcount;
@@ -55,13 +55,13 @@ vector<Event> ICSAccess::getEvents(){
 		}
 
 		switch (CurrentComponent) {
-			case VCALENDAR:
+			case Component::VCALENDAR:
 				if (Line.find("BEGIN:VEVENT") == 0) {
-					CurrentComponent = VEVENT;
+					CurrentComponent = Component::VEVENT;
 				}
 				break;
 
-			case VEVENT:
+			case Component::VEVENT:
 				if (Line.find("UID") == 0) {
                     prevUID = UID;
                     UID = getProperty(Line);
@@ -114,7 +114,7 @@ vector<Event> ICSAccess::getEvents(){
                     }
                     events.push_back(currentEvent);
 					//TODO: Create new event, push into vector
-					CurrentComponent = VCALENDAR;
+					CurrentComponent = Component::VCALENDAR;
 
 					recurs = false;
 					hasEnd = false;
