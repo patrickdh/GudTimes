@@ -15,7 +15,11 @@ class ICSAccess
         void deleteICS();
     protected:
     private:
-        std::string fileName;
+        std::string filename;
+        int untilToCount(const string& firstTime, const string& freq, const string& lastTime) const;
+        std::string getProperty(const string &Line) const;
+        std::string getSubProperty(const string &Line, const char *SubProperty) const;
+
 };
 
 class FileNotFoundException
@@ -26,4 +30,5 @@ class FileNotFoundException
     protected:
     private:
         std::string errorDescription;
+
 };
