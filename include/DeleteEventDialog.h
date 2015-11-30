@@ -5,6 +5,7 @@
 
 #include "Calendar.h"
 #include "DEDialog.h"
+#include "Calendar.h"
 
 class DeleteEventDialog : public DEDialog
 {
@@ -14,6 +15,8 @@ class DeleteEventDialog : public DEDialog
     protected:
         void onOK(wxCommandEvent& event);
         void onCancel(wxCommandEvent& event);
+        void onSelection(wxCommandEvent& event);
     private:
         int indexToDelete;
+        std::vector<Event> events;
 };
