@@ -47,8 +47,8 @@ LoginFrame::LoginFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer2->Add( m_staticText1, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	m_textCtrl1 = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer2->Add( m_textCtrl1, 0, wxALIGN_CENTER|wxALL, 5 );
+	usernameText = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer2->Add( usernameText, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, wxT("Password:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
@@ -56,8 +56,8 @@ LoginFrame::LoginFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer2->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	m_textCtrl2 = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-	bSizer2->Add( m_textCtrl2, 0, wxALIGN_CENTER|wxALL, 5 );
+	passwordText = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+	bSizer2->Add( passwordText, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );

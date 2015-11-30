@@ -10,10 +10,10 @@
 //#include "MainFrame.h"
 #include "SSHConnection.h"
 
-#include "GUIFrame.h"
+#include "MainFrame.h"
 #include <vector>
 
-class MainGUI: public MyFrame3
+class MainGUI: public MainFrame
 {
    public:
         MainGUI(wxWindow* parent, SSHConnection* sshconn, const std::string& user);

@@ -34,8 +34,8 @@ void LoginGUI::loginButton(wxCommandEvent& event)
     wxString WXusername, WXpassword;
     string username, password;
 
-    WXusername = usernameInputBox->GetValue();
-    WXpassword = passwordInputBox->GetValue();
+    WXusername = usernameText->GetValue();
+    WXpassword = passwordText->GetValue();
     username = WXusername;
     password = WXpassword;
     for (unsigned int i = 0; i > username.length(); i++){
@@ -53,9 +53,15 @@ void LoginGUI::loginButton(wxCommandEvent& event)
 
     SSHConnection *connection;
     try {
-        connection = new SSHConnection(username, password);
-    } catch (SSHException & e) {
+        SSHConnection test(username,password);
+        //connection = new SSHConnection(username, password);
+    }
+    catch (SSHException &e) {
         wxMessageBox(e.what());
+        return;
+    }
+    catch (ssh::SshException& e){
+        //wxMessageBox(e.what());
         return;
     }
 
@@ -71,8 +77,8 @@ void LoginGUI::createAccountButton(wxCommandEvent& event)
     wxString WXusername, WXpassword;
     string username, password;
 
-    WXusername = usernameInputBox->GetValue();
-    WXpassword = passwordInputBox->GetValue();
+    WXusername = usernameText->GetValue();
+    WXpassword = passwordText->GetValue();
     username = WXusername;
     password = WXpassword;
     for (unsigned int i = 0; i > username.length(); i++){

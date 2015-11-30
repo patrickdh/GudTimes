@@ -1,4 +1,5 @@
 #include "MainGUI.h"
+#include "LoginGUI.h"
 #include "Calendar.h"
 #include "NotificationAccess.h"
 #include "AddEventDialog.h"
@@ -27,7 +28,7 @@
 using namespace std;
 
 MainGUI::MainGUI(wxWindow *frame, SSHConnection *conn, const std::string& uname)
-    : MyFrame3(frame)
+    : MainFrame(frame)
 {
     connection = conn;
     username = uname;
@@ -252,7 +253,7 @@ void MainGUI::logoutButton(wxCommandEvent &event)
 {
     clearLocalData();
     delete connection;
-    GUIFrame* frame = new GUIFrame(0L);
+    LoginGUI* frame = new LoginGUI(0L);
     frame->SetIcon(wxICON(aaaaa_logo)); // To Set App Icon
     frame->Show();
     Destroy();

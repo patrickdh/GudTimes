@@ -42,9 +42,9 @@ class LoginFrame : public wxFrame
 		wxPanel* m_panel1;
 		wxStaticText* m_staticText3;
 		wxStaticText* m_staticText1;
-		wxTextCtrl* m_textCtrl1;
+		wxTextCtrl* usernameText;
 		wxStaticText* m_staticText2;
-		wxTextCtrl* m_textCtrl2;
+		wxTextCtrl* passwordText;
 		wxButton* m_button1;
 		wxButton* m_button5;
 		
