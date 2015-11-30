@@ -53,8 +53,7 @@ void LoginGUI::loginButton(wxCommandEvent& event)
 
     SSHConnection *connection;
     try {
-        SSHConnection test(username,password);
-        //connection = new SSHConnection(username, password);
+        connection = new SSHConnection(username, password);
     }
     catch (SSHException &e) {
         wxMessageBox(e.what());
