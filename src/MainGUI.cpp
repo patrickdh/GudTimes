@@ -1,3 +1,18 @@
+#include "MainGUI.h"
+#include "Calendar.h"
+#include "NotificationAccess.h"
+#include "AddEventDialog.h"
+#include "ScheduleEventDialog.h"
+#include "DeleteEventDialog.h"
+#include "NotificationsDialog.h"
+#include <wx/filedlg.h>
+#include <wx/textdlg.h>
+#include <wx/msgdlg.h>
+#include <fstream>
+#include <iostream>
+#include <dirent.h>
+#include <stdio.h>
+#include <windows.h>
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -9,93 +24,318 @@
     #include <wx/wx.h>
 #endif // WX_PRECOMP
 
-#include "MainGUI.h"
-
 using namespace std;
 
-MainGUI::MainGUI(wxWindow* parent, SSHConnection* sshconn, const std::string& user)
-: MainFrame(parent)
+MainGUI::MainGUI(wxWindow *frame, SSHConnection *conn, const std::string& uname)
+    : MyFrame3(frame)
 {
-    //ctor
+    connection = conn;
+    username = uname;
+    wxCommandEvent dummy;
+    refreshButton(dummy);
 }
 
-void MainGUI::onClose(wxCloseEvent& event)
+MainGUI::~MainGUI()
 {
-
+    //dtor
 }
 
-void MainGUI::refreshButton(wxCommandEvent& event)
+void MainGUI::onClose(wxCloseEvent &event)
 {
-
+    clearLocalData();
+    delete connection;
+    Destroy();
 }
 
-void MainGUI::addEventButton(wxCommandEvent& event)
+void MainGUI::refreshButton(wxCommandEvent &event)
 {
-
+    clearLocalData();
+    fetchNotifications();
+    fetchCalendars();
 }
 
-void MainGUI::scheduleEventButton(wxCommandEvent& event)
+void MainGUI::addEventButton(wxCommandEvent &event)
 {
+    wxArrayInt cldrList;
+    int num = calendarList->GetSelections(cldrList);
+    if(num != 1) {
+        wxMessageBox("Please select a single calendar!");
+    }
+    else {
+        if(!calendars.at(cldrList.Item(0)).getIsEditable()) {
+            wxMessageBox("Calendar is read-only, please enter a valid calendar!");
+        }
+        else {
+            AddEventDialog *dialog = new AddEventDialog(this);
+            if (dialog->ShowModal() == wxID_OK) {
+                   calendars.at(cldrList.Item(0)).addEvent(dialog->getEvent());
+                   drawSchedule();
+            }
+        }
+    }
 
-}
-
-void MainGUI::deleteEventButton(wxCommandEvent& event)
-{
-
-}
-
-void MainGUI::viewNotificationsButton(wxCommandEvent& event)
-{
-
-}
-
-void MainGUI::addCalendarButton(wxCommandEvent& event)
-{
-
-}
-
-void MainGUI::addCalendarURLButton(wxCommandEvent& event)
-{
-
-}
-
-void MainGUI::deleteCalendarButton(wxCommandEvent& event)
-{
-
-}
-
-void MainGUI::logoutButton(wxCommandEvent& event)
-{
 
 }
 
-void MainGUI::onCalendarSelect(wxCommandEvent& event)
+void MainGUI::scheduleEventButton(wxCommandEvent &event)
 {
+    wxArrayInt cldrList;
+    int num = calendarList->GetSelections(cldrList);
+    if(num != 1) {
+        wxMessageBox("Please select a single calendar!");
+    }
+    else {
+        if(!calendars.at(cldrList.Item(0)).getIsEditable()) {
+            wxMessageBox("Calendar is read-only, please enter a valid calendar!");
+        }
+        else {
+            ScheduleEventDialog *dialog = new ScheduleEventDialog(this, connection, username);
+            if(dialog->ShowModal()== wxID_OK) {
+                Event evt = dialog->getEvent();
+                vector<string> users = dialog->getUsers();
+                Notification newNot(username,NotificationTypeEnum::NEWEVENT, evt);
+                try {
+                    connection->sendNotification(newNot, users);
+                } catch (SSHException &e) {
+                    wxMessageBox(e.what());
+                }
+                calendars.at(cldrList.Item(0)).addEvent(evt);
+                string fileName = calendars.at(cldrList.Item(0)).getFileName();
+                wxFileName calName(fileName);
+                connection->uploadFile(calName);
+                drawSchedule();
+            }
+        }
+    }
+}
+
+void MainGUI::deleteEventButton(wxCommandEvent &event)
+{
+    wxArrayInt cldrList;
+    int num = calendarList->GetSelections(cldrList);
+    if(num != 1) {
+        wxMessageBox("Please select a single calendar!");
+    }
+    else {
+        if(!calendars.at(cldrList.Item(0)).getIsEditable()) {
+            wxMessageBox("Calendar is read-only, please enter a valid calendar!");
+        }
+        else {
+            DeleteEventDialog *dialog = new DeleteEventDialog(this,calendars.at(cldrList.Item(0)));
+            if (dialog->ShowModal() == wxID_OK) {
+                Calendar calTest = calendars.at(cldrList.Item(0));
+                int indx = dialog->getIndex();
+                calTest.addEvent(calTest.getEvents().at(indx));
+                string calName = calTest.getFileName();
+                wxFileName cal(calName);
+                connection->uploadFile(cal);
+                drawSchedule();
+            }
+
+        }
+    }
 
 }
 
-void MainGUI::onDateSelect(wxCommandEvent& event)
+void MainGUI::viewNotificationsButton(wxCommandEvent &event)
 {
+    wxArrayInt cldrList;
+    int num = calendarList->GetSelections(cldrList);
+    if(num != 1) {
+        wxMessageBox("Please select a single calendar!");
+    }
+    else {
+        if(!calendars.at(cldrList.Item(0)).getIsEditable()) {
+            wxMessageBox("Calendar is read-only, please enter a valid calendar!");
+        }
+        else {
+            NotificationsDialog *dialog = new NotificationsDialog(this,notifications,username);
+            if (dialog->ShowModal() == wxID_OK) {
+                vector<Event> events = dialog->getEvents();
+                //add each to calendar
+                vector<int> clearedEvents = dialog->getClearedNotifications();
+                NotificationAccess *notAccess = new NotificationAccess(connection);
+                notAccess->clearNotifications(clearedEvents);
+                vector<pair<Notification,string>> outNot = dialog->getOutgoingNotifications();
+                typedef vector<pair<Notification, string> > vector_type;
+                for (vector_type::const_iterator pos = outNot.begin();
+                     pos != outNot.end(); ++pos) {
 
+                        try {
+                            connection->sendNotification(pos->first,pos->second);
+                        }catch(SSHException &e) {
+                            wxMessageBox(e.what());
+                        }
+                }
+                    drawSchedule();
+            }
+        }
+    }
+}
+
+void MainGUI::addCalendarButton(wxCommandEvent &event)
+{
+    wxString caption = wxT("Choose a file");
+    wxString wildcard = wxT("ICS files (*.ics)");
+    wxString defaultDir = wxT("c:\\temp");
+    wxString defaultFilename = wxEmptyString;
+
+    wxFileDialog dialog(this, caption, defaultDir, defaultFilename,
+        wildcard, wxOPEN);
+    if (dialog.ShowModal() == wxID_OK)
+    {
+        wxString path = dialog.GetPath();
+        string dest = "./data/";
+        dest += dialog.GetFilename().mb_str();
+        std::ifstream  src(path.mb_str(), std::ios::binary);
+        std::ofstream  dst(dest,   std::ios::binary);
+        dst << src.rdbuf();
+        Calendar cal1(dest,true);
+        wxFileName file1(dest);
+        try {
+            connection->uploadFile(file1);
+        }catch(SSHException & e){
+            wxMessageBox(e.what());
+        }
+        calendars.push_back(cal1);
+        listCalendars();
+
+    }
+
+}
+
+void MainGUI::addCalendarURLButton(wxCommandEvent &event)
+{
+    wxTextEntryDialog dialog(this,
+            wxT("Please enter a calendar URL for a .ics file"),
+            wxT("Please enter a URL"),
+            wxT("Enter here"),
+            wxOK | wxCANCEL);
+
+    if (dialog.ShowModal() == wxID_OK) {
+        int test = connection->addURL(dialog.GetValue().mb_str());
+        if(test == 0) {
+            connection->addURL(dialog.GetValue().mb_str());
+            wxCommandEvent dummy;
+            refreshButton(dummy);
+        }
+        else if(test == 1) {
+            wxMessageBox("Cannot access URL, please enter a valid URL.");
+        }
+        else {
+            wxMessageBox("Incorrect file found, please provide a link to a valid .ics file.");
+        }
+    }
+}
+
+void MainGUI::deleteCalendarButton(wxCommandEvent &event)
+{
+    wxArrayInt cldrList;
+    int num = calendarList->GetSelections(cldrList);
+    if(num != 1) {
+        wxMessageBox("Please select a single calendar for deletion!");
+    }
+    else {
+        calendars.at(cldrList.Item(0)).deleteCalendar();
+        try {
+            connection->deleteFile(calendars.at(cldrList.Item(0)).getFileName());
+        } catch(SSHException &e) {
+            wxMessageBox(e.what());
+        }
+        calendars.erase(calendars.begin()+cldrList.Item(0));
+        listCalendars();
+        drawSchedule();
+    }
+}
+
+void MainGUI::logoutButton(wxCommandEvent &event)
+{
+    clearLocalData();
+    delete connection;
+    GUIFrame* frame = new GUIFrame(0L);
+    frame->SetIcon(wxICON(aaaaa_logo)); // To Set App Icon
+    frame->Show();
+    Destroy();
+}
+
+void MainGUI::onCalendarSelect(wxCommandEvent &event)
+{
+    drawSchedule();
+}
+
+void MainGUI::onDateSelect(wxCommandEvent &event)
+{
+    drawSchedule();
 }
 
 void MainGUI::fetchNotifications()
 {
+    try {
+        connection->getNotifications();
+    } catch(SSHException &e) {
+        wxMessageBox(e.what());
+    }
 
+    updateNotificationsFlag();
 }
 
 void MainGUI::updateNotificationsFlag()
 {
+    ifstream inputFile("notify.txt");
+    if ( inputFile.peek() == ifstream::traits_type::eof() )
+    {
+        notificationButton->SetOwnBackgroundColour(*wxRED);
+
+    }
+    else {
+        notificationButton->SetOwnBackgroundColour(wxColour(224,224,224));
+    }
+
 
 }
 
 void MainGUI::fetchCalendars()
 {
+    //Confused of purpose here
+    calendars.clear();
+    int cals;
+    try {
+        cals = connection->getCalendars();
+    } catch(SSHException &e) {
+        wxMessageBox(e.what());
+    }
+    DIR           *d;
+    struct dirent *dir;
+    vector<string> dirlist;
+    int i=0;
+    d = opendir("./data");
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+        i++;
+        cout<<dir->d_name<<endl;
+        dirlist.push_back(dir->d_name);
+        }
+        for (size_t n = 0; n < dirlist.size(); n++)
+            cout << dirlist[ n ] << " ";
+            cout << endl;
+
+        closedir(d);
+    }
+    listCalendars();
+    drawSchedule();
+
 
 }
 
 void MainGUI::listCalendars()
 {
+    calendarList->Clear();
+    for(int i = 0; i < calendars.size() ; i++)
+    {
+        calendarList->Append(calendars.at(i).getFileName());
+    }
 
 }
 
@@ -106,5 +346,23 @@ void MainGUI::drawSchedule()
 
 void MainGUI::clearLocalData()
 {
+    DIR           *d;
+    struct dirent *dir;
+    vector<string> dirlist;
+    d = opendir("./data");
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+        dirlist.push_back(dir->d_name);
+        }
+        for (size_t n = 0; n < dirlist.size(); n++)
+            //remove(dirlist[ n ]);
+
+        closedir(d);
+    }
+
 
 }
+
+
