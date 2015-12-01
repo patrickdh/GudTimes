@@ -91,6 +91,10 @@ vector<Event> ICSAccess::getEvents(){
                     if (!WXstart.ParseTime(wxString(time.c_str(),wxConvUTF8))){
                         useable = false;
                     }
+			if (Line.find("TZID") == string::npos){
+				wxTimeSpan estConvert(5);
+				WXstart.Subtract(estConvert);
+			}
 					}
 
 				} else if (Line.find("DTEND") == 0) {
@@ -118,6 +122,10 @@ vector<Event> ICSAccess::getEvents(){
                         useable = false;
                     }
 					hasEnd = true;
+			if (Line.find("TZID") == string::npos){
+				wxTimeSpan estConvert(5);
+				WXend.Subtract(estConvert);
+			}
 					}
 
 				} else if (Line.find("SUMMARY") == 0) {
