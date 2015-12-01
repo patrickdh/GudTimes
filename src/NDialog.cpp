@@ -32,7 +32,7 @@ NDialog::NDialog( wxWindow* parent, wxWindowID id, const wxString& title, const 
 	
 	bSizer1->Add( m_staticText1, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	notificationsListBox = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	notificationsListBox = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_HSCROLL ); 
 	notificationsListBox->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
 	
 	bSizer1->Add( notificationsListBox, 1, wxALL|wxEXPAND, 5 );
