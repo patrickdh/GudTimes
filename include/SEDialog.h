@@ -50,9 +50,10 @@ class SEDialog : public wxDialog
 		wxButton* buttonCreate;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnFindButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnExitClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCreateClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnFindTimes( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCreate( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnFormChange( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

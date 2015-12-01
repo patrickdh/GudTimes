@@ -16,7 +16,8 @@ using namespace std;
 ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, const std::string& user)
 : SEDialog(parent)
 {
-    //ctor
+    connection = sshconn;
+    username = user;
 }
 
 Event ScheduleEventDialog::getEvent() const
@@ -29,7 +30,7 @@ std::vector<std::string> ScheduleEventDialog::getUsers() const
 
 }
 
-void ScheduleEventDialog::onChange(wxCommandEvent& event)
+void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
 {
 	textboxUsers->Clear();
 	textboxDuration->Clear();
@@ -38,11 +39,10 @@ void ScheduleEventDialog::onChange(wxCommandEvent& event)
     buttonCreate->Disable();
 }
 
-void ScheduleEventDialog::onFindTimes(wxCommandEvent& event)
+void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
 {
    //bool validEntries = validateEntries();
     if (true){
-        vector<string> users;
         vector<wxDateTime> timeSlots;
         ifstream fileIn;
         string line;
@@ -62,14 +62,18 @@ void ScheduleEventDialog::onFindTimes(wxCommandEvent& event)
         string token;
 
         while (getline(ss, token, ',')){
-            users.push_back(token);
+            userList.push_back(token);
         }
 
-        //send users and duration, day, month, year to server
-        //server returns path to file (text file probably) of available time slots
-        /*fileIn.open(PATH);
+        int result = connection.findTimes(userList);
+        connection.getTimes();
 
-        fileIn >> numberSlots;
+        ifstream input("./data\\found_times.txt");
+
+        //get users and duration, day, month, year to server
+        //server returns path to file (text file probably) of available time slots
+
+        input >> numberSlots;
         if (numberSlots != 0){
             while(getline(fileIn, line){
 
@@ -86,11 +90,10 @@ void ScheduleEventDialog::onFindTimes(wxCommandEvent& event)
             //wxMessageBox("No time slots")
         }
         generateTimeRanges(timeSlots, duration);
-        */
     }
 }
 
-void ScheduleEventDialog::onOK(wxCommandEvent& event)
+void ScheduleEventDialog::OnCreate(wxCommandEvent& event)
 {
 	wxString startString;
 wxString endString;
@@ -105,11 +108,11 @@ endString   = choice.SubString(9,16);
 startDT.ParseTime(startString);
 endDT.ParseTime(endString);
 
-//Event newEvent(textboxEventName.GetLineText(), startDT, endDT);
+createdEvent = Event (textboxEventName.GetLineText(), startDT, endDT);
 
 }
 
-void ScheduleEventDialog::onCancel(wxCommandEvent& event)
+void ScheduleEventDialog::OnExit(wxCommandEvent& event)
 {
     Close();
 }

@@ -44,7 +44,7 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	textboxEventName = new wxTextCtrl( panelMain, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizerEventDescription->Add( textboxEventName, 0, wxALL, 5 );
 	
-	labelEventDuration = new wxStaticText( panelMain, wxID_ANY, wxT("Duration of Event (minutes): "), wxDefaultPosition, wxDefaultSize, 0 );
+	labelEventDuration = new wxStaticText( panelMain, wxID_ANY, wxT("Duration of Event: "), wxDefaultPosition, wxDefaultSize, 0 );
 	labelEventDuration->Wrap( -1 );
 	fgSizerEventDescription->Add( labelEventDuration, 0, wxALL, 5 );
 	
@@ -69,7 +69,8 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizerEventList;
 	bSizerEventList = new wxBoxSizer( wxVERTICAL );
 	
-	eventChoiceList = new wxListBox( panelMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	eventChoiceList = new wxListBox( panelMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	eventChoiceList->Append( wxT("08:00:00-13:00:00") );
 	bSizerEventList->Add( eventChoiceList, 1, wxALL|wxEXPAND, 5 );
 	
 	
@@ -81,11 +82,10 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	buttonFind = new wxButton( panelMain, wxID_ANY, wxT("&Find"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerButtons->Add( buttonFind, 0, wxALL, 5 );
 	
-	buttonExit = new wxButton( panelMain, wxID_ANY, wxT("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonExit = new wxButton( panelMain, wxID_ANY, wxT("&Exit"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerButtons->Add( buttonExit, 0, wxALL, 5 );
 	
-	buttonCreate = new wxButton( panelMain, wxID_ANY, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-	buttonCreate->Disable();
+	buttonCreate = new wxButton( panelMain, wxID_ANY, wxT("&Create"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerButtons->Add( buttonCreate, 0, wxALL, 5 );
 	
 	
@@ -104,22 +104,28 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	buttonFind->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::onFindTimes ), NULL, this );
-	buttonExit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::onCancel ), NULL, this );
-	buttonCreate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::onOK ), NULL, this );
-	textboxDuration->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnTextChange ), NULL, this );
-	textboxUsers->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnTextChange ), NULL, this );
-	textboxEventName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnTextChange ), NULL, this );
+	buttonFind->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
+	buttonExit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::OnExit ), NULL, this );
+	buttonCreate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::OnCreate ), NULL, this );
+	textboxUsers->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnFormChange ), NULL, this );
+	textboxUsers->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
+	textboxDuration->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnFormChange ), NULL, this );
+	textboxDuration->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
+	textboxEventName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnFormChange ), NULL, this );
+	textboxEventName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
 }
 
 SEDialog::~SEDialog()
 {
 	// Disconnect Events
-	buttonFind->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::onFindTimes ), NULL, this );
-	buttonExit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::onCancel ), NULL, this );
-	buttonCreate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::onOK ), NULL, this );
-	textboxUsers->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::onChange ), NULL, this );
-	textboxDuration->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::onChange ), NULL, this );
-	textboxEventName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::onChange ), NULL, this );
+	buttonFind->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
+	buttonExit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::OnExit ), NULL, this );
+	buttonCreate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SEDialog::OnCreate ), NULL, this );
+	textboxUsers->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnFormChange ), NULL, this );
+	textboxUsers->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
+	textboxDuration->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnFormChange ), NULL, this );
+	textboxDuration->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
+	textboxEventName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SEDialog::OnFormChange ), NULL, this );
+	textboxEventName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SEDialog::OnFindTimes ), NULL, this );
 	
 }
