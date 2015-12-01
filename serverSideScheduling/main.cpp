@@ -174,10 +174,14 @@ void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
     if (output.is_open()){
         output << freeSlots << '\n';
         for (i = 0; i < validTimes.size(); i++){
-            if (i%2 == 0)
-                output << validTimes[i].FormatISOTime() << ';';
-            else
-                output << validTimes[i].FormatISOTime() << '\n';
+            if (i%2 == 0){
+		string temp(validTimes[i].FormatISOTime().mb_str());
+                output << temp << ';';
+	}
+            else{
+		string temp(validTimes[i].FormatISOTime().mb_str());
+                output << temp << '\n';
+	}
         }
     }
 
