@@ -177,7 +177,7 @@ void MainGUI::viewNotificationsButton(wxCommandEvent &event)
 void MainGUI::addCalendarButton(wxCommandEvent &event)
 {
     wxString caption = wxT("Choose a file");
-    wxString wildcard = wxT("ICS files (*.ics)");
+    wxString wildcard = wxT("ICS files (*.ics)|*.ics");
     wxString defaultDir = wxT("c:\\temp");
     wxString defaultFilename = wxEmptyString;
 
@@ -193,16 +193,10 @@ void MainGUI::addCalendarButton(wxCommandEvent &event)
         dst << src.rdbuf();
         Calendar cal1(dest,true);
         wxFileName file1(dest);
-        try {
-            connection->uploadFile(file1);
-        }catch(SSHException & e){
-            wxMessageBox(e.what());
-        }
+        connection->uploadFile(file1);
         calendars.push_back(cal1);
         listCalendars();
-
     }
-
 }
 
 void MainGUI::addCalendarURLButton(wxCommandEvent &event)
@@ -239,7 +233,8 @@ void MainGUI::deleteCalendarButton(wxCommandEvent &event)
     else {
         calendars.at(cldrList.Item(0)).deleteCalendar();
         try {
-            connection->deleteFile(calendars.at(cldrList.Item(0)).getFileName());
+            wxFileName cal(calendars.at(cldrList.Item(0)).getFileName());
+            connection->deleteFile(cal.GetFullName().mb_str());
         } catch(SSHException &e) {
             wxMessageBox(e.what());
         }
@@ -283,7 +278,7 @@ void MainGUI::fetchNotifications()
 void MainGUI::updateNotificationsFlag()
 {
     ifstream inputFile("notify.txt");
-    if ( inputFile.peek() == ifstream::traits_type::eof() )
+    if ( !inputFile.peek() == ifstream::traits_type::eof() )
     {
         notificationButton->SetOwnBackgroundColour(*wxRED);
 
@@ -335,7 +330,13 @@ void MainGUI::listCalendars()
     calendarList->Clear();
     for(int i = 0; i < calendars.size() ; i++)
     {
-        calendarList->Append(calendars.at(i).getFileName());
+        string cal1 = calendars.at(i).getFileName();
+        string name = cal1.substr(7,cal1.size()-11);
+        string subcal1 = name.substr(0,3);
+        if (subcal1.compare("ro_") == 0 ){
+            name = cal1.substr(10,cal1.size()-14);
+        }
+        calendarList->Append(name);
     }
 
 }

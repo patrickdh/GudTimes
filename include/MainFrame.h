@@ -33,10 +33,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class MainFrame
 ///////////////////////////////////////////////////////////////////////////////
-class MainFrame : public wxFrame 
+class MainFrame : public wxFrame
 {
 	private:
-	
+
 	protected:
 		wxSplitterWindow* m_splitter3;
 		wxPanel* m_panel5;
@@ -313,32 +313,32 @@ class MainFrame : public wxFrame
 		wxTextCtrl* fri13;
 		wxTextCtrl* sat13;
 		wxTextCtrl* sun13;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void refreshButton( wxCommandEvent& event ) { event.Skip(); }
-		virtual void addCalendarEvent( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void addCalendarButton( wxCommandEvent& event ) { event.Skip(); }
+		virtual void addCalendarURLButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void deleteCalendarButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void addEventButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void scheduleEventButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void deleteEventButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void viewNotificationsButton( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
-		
+
 		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GudTimes"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1170,730 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-		
+
 		~MainFrame();
-		
+
 		void m_splitter3OnIdle( wxIdleEvent& )
 		{
 			m_splitter3->SetSashPosition( 195 );
 			m_splitter3->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::m_splitter3OnIdle ), NULL, this );
 		}
-	
+
 };
 
 #endif //__MAINFRAME_H__
