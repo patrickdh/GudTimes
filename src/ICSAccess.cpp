@@ -69,13 +69,43 @@ vector<Event> ICSAccess::getEvents(){
 				} else if (Line.find("DTSTART") == 0) {
 					eventStart = getProperty(Line);
 					useable = true;
-					if(!WXstart.ParseDateTime(wxString(eventStart)))
+
+					string date = eventStart.substr(0,8);
+
+                    date.insert(4,"-");
+                    date.insert(7, "-");
+
+                    string time = eventStart.substr(9,6);
+
+                    time.insert(2,":");
+                    time.insert(5,":");
+
+                    if (!WXstart.ParseDate(date.c_str())){
                         useable = false;
+                    }
+                    if (!WXstart.ParseTime(time.c_str())){
+                        useable = false;
+                    }
 
 				} else if (Line.find("DTEND") == 0) {
 					eventEnd = getProperty(Line);
-					if(!WXstart.ParseDateTime(wxString(eventStart)))
+
+					string date = eventEnd.substr(0,8);
+
+                    date.insert(4,"-");
+                    date.insert(7, "-");
+
+                    string time = eventEnd.substr(9,6);
+
+                    time.insert(2,":");
+                    time.insert(5,":");
+
+                    if (!WXend.ParseDate(date.c_str())){
                         useable = false;
+                    }
+                    if (!WXend.ParseTime(time.c_str())){
+                        useable = false;
+                    }
 					hasEnd = true;
 
 				} else if (Line.find("SUMMARY") == 0) {
@@ -87,9 +117,12 @@ vector<Event> ICSAccess::getEvents(){
 					freq = getSubProperty(Line, "FREQ");
 					rcount = atoi(getSubProperty(Line, "COUNT").c_str());
 					until = getSubProperty(Line, "UNTIL");
-					if (until != "no" && useable)
+					if (until != "" && useable)
                         rcount = untilToCount(eventStart, freq, until);
-                    if (rcount == (-1))
+                    if (rcount == 0){
+                        rcount = 1000;
+                    }
+                    else if (rcount == (-1))
                         useable = false;
                     if (useable){
                         if (freq == "DAILY")
@@ -138,11 +171,41 @@ vector<Event> ICSAccess::getEvents(){
 int ICSAccess::untilToCount(const string& firstTime, const string& freq, const string& lastTime) const {
     wxDateTime WXstart, WXend;
     wxTimeSpan WXdiff;
-    if(!WXstart.ParseDateTime(wxString(firstTime)))
-       return -1;
 
-    if(!WXend.ParseDateTime(wxString(lastTime)))
-       return -1;
+    string date = firstTime.substr(0,8);
+
+    date.insert(4,"-");
+    date.insert(7, "-");
+
+    string time = firstTime.substr(9,6);
+
+    time.insert(2,":");
+    time.insert(5,":");
+
+    if (!WXstart.ParseDate(date.c_str())){
+        return -1;
+    }
+    if (!WXstart.ParseTime(time.c_str())){
+        return -1;
+    }
+
+    date = lastTime.substr(0,8);
+
+    date.insert(4,"-");
+    date.insert(7, "-");
+
+    time = lastTime.substr(9,6);
+
+    time.insert(2,":");
+    time.insert(5,":");
+
+
+    if (!WXend.ParseDate(date.c_str())){
+        return -1;
+    }
+    if (!WXend.ParseTime(time.c_str())){
+        return -1;
+    }
 
     if (WXstart.IsEarlierThan(WXend)){
         WXdiff = WXstart.Subtract(WXend);
