@@ -445,7 +445,7 @@ bool SSHConnection::doesUserExist(const std::string& username)
         return false;       // User not found, or invalid input
 }
 
-int SSHConnection::findTimes(const std::vector<std::string>& usersToSearch, int length)
+int SSHConnection::findTimes(const std::vector<std::string>& usersToSearch, int length, const std::string date)
 {
     string outName = "./data/";
     outName += "userslist.txt";
@@ -481,6 +481,8 @@ int SSHConnection::findTimes(const std::vector<std::string>& usersToSearch, int 
     ss << session_user;
     ss << " ";
     ss << length;
+    ss << " ";
+    ss << date;
 
     const string commandString = ss.str();
 
