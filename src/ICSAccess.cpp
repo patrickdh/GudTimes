@@ -109,7 +109,6 @@ vector<Event> ICSAccess::getEvents()
                     {
                         wxTimeSpan estConvert(5);
                         WXstart.Subtract(estConvert);
-                        WXend.Subtract(estConvert);
                     }
                 }
 
@@ -147,7 +146,6 @@ vector<Event> ICSAccess::getEvents()
                     if (Line.find("TZID") == string::npos)
                     {
                         wxTimeSpan estConvert(5);
-                        WXstart.Subtract(estConvert);
                         WXend.Subtract(estConvert);
                     }
                 }
