@@ -5,7 +5,7 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "scheduleGui.h"
+#include "SEDialog.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -71,7 +71,6 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizerEventList = new wxBoxSizer( wxVERTICAL );
 
 	eventChoiceList = new wxListBox( panelMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-	eventChoiceList->Append( wxT("08:00:00-13:00:00") );
 	bSizerEventList->Add( eventChoiceList, 1, wxALL|wxEXPAND, 5 );
 
 

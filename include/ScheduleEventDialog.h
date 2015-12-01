@@ -22,7 +22,7 @@ class ScheduleEventDialog : public SEDialog
         void OnFindTimes(wxCommandEvent& event);
         void OnCreate(wxCommandEvent& event);
         void OnExit(wxCommandEvent& event);
-        void generateTimeRanges (vector<wxDateTime>, int duration);
+        void generateTimeRanges (std::vector<wxDateTime>, int duration);
     private:
         SSHConnection* connection;
         std::string username;

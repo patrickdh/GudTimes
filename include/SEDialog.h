@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __SCHEDULEGUI_H__
-#define __SCHEDULEGUI_H__
+#ifndef __SEDIALOG_H__
+#define __SEDIALOG_H__
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
@@ -31,10 +31,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class SEDialog
 ///////////////////////////////////////////////////////////////////////////////
-class SEDialog : public wxDialog 
+class SEDialog : public wxDialog
 {
 	private:
-	
+
 	protected:
 		wxPanel* panelMain;
 		wxStaticText* labelUsers;
@@ -48,21 +48,22 @@ class SEDialog : public wxDialog
 		wxButton* buttonFind;
 		wxButton* buttonExit;
 		wxButton* buttonCreate;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnFindTimes( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnFormChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnFormChange( wxCalendarEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreate( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
-		wxString wxUsers; 
-		wxString wxEventName; 
-		int eventDuration; 
-		
-		SEDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Schedule Event"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 644,495 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP ); 
+		wxString wxUsers;
+		wxString wxEventName;
+		int eventDuration;
+
+		SEDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Schedule Event"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 644,495 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~SEDialog();
-	
+
 };
+#endif //__SEDIALOG_H__

@@ -125,10 +125,9 @@ void MainGUI::deleteEventButton(wxCommandEvent &event)
         else {
             DeleteEventDialog *dialog = new DeleteEventDialog(this,calendars.at(cldrList.Item(0)));
             if (dialog->ShowModal() == wxID_OK) {
-                Calendar calTest = calendars.at(cldrList.Item(0));
                 int indx = dialog->getIndex();
-                calTest.deleteEvent(indx);
-                string calName = calTest.getFileName();
+                calendars.at(cldrList.Item(0)).deleteEvent(indx);
+                string calName = calendars.at(cldrList.Item(0)).getFileName();
                 wxFileName cal(calName);
                 connection->uploadFile(cal);
                 drawSchedule();
