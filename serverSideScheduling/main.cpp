@@ -40,14 +40,14 @@ int main(int argc, char** argv)
         string PATH = all_args[0];
         string durationString = all_args[1];
         string dateString = all_args[2];
-        cout << PATH << endl;
-        cout << durationString << endl;
-        cout << dateString << endl;
+        //cout << PATH << endl;
+        //cout << durationString << endl;
+        //cout << dateString << endl;
         wxDateTime date, start, finish;
 
         int duration = atoi(durationString.c_str());
 
-        wxString wxDateString(dateString);
+        wxString wxDateString(dateString.c_str(),wxConvUTF8);
         date.ParseDate(wxDateString);
         try {
             Calendar cal(PATH, false);
@@ -103,12 +103,12 @@ void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
     bool freeTimeTable[24][4];
     bool setMinute;
 
-    cout << "Date we want: " << date.FormatISODate() << endl;
+    //cout << "Date we want: " << date.FormatISODate() << endl;
 
      for (int i =0; i<events.size(); i++){
         start = events[i].getStart();
         finish = events[i].getEnd();
-        cout << events[i].getTitle() << " : " << start.FormatISODate() << " to " << finish.FormatISODate() << " --- " << start.FormatISOTime() << " to " << finish.FormatISOTime() << endl;
+        //cout << events[i].getTitle() << " : " << start.FormatISODate() << " to " << finish.FormatISODate() << " --- " << start.FormatISOTime() << " to " << finish.FormatISOTime() << endl;
     }
 
     //Initialize all of the available slots to be true
@@ -135,7 +135,7 @@ void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
             startDT = events[ei].getStart();
             endDT = events[ei].getEnd();
             if (startDT.FormatISODate() == date.FormatISODate()){
-                cout << "Passed single event test" << endl;
+               // cout << "Passed single event test" << endl;
                 s_hour = startDT.GetHour();
                 e_hour = endDT.GetHour();
 
@@ -181,12 +181,12 @@ void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
         }
     }
 
-    cout << freeSlots << endl;
+    //cout << freeSlots << endl;
     for (i = 0; i <validTimes.size() ; i++){
-        if (i % 2 == 0)
-            cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << " to ";
-        else
-            cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << endl;
+        if (i % 2 == 0){;}
+            //cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << " to ";
+        else{;}
+            //cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << endl;
     }
 }
 
@@ -249,7 +249,7 @@ void searchTimeSlotMonthly(Event event, bool (&table)[24][4], wxDateTime date){
 
     for (int i = 0; i < repeat; i++){
         if (date.IsSameDate(startDT)){
-            cout << "Passed Monthly Test" << endl;
+            //cout << "Passed Monthly Test" << endl;
             sameDateFlag = true;
             break;
         }
@@ -289,12 +289,12 @@ void searchTimeSlotMonthly(Event event, bool (&table)[24][4], wxDateTime date){
 }
 
 void searchTimeSlotWeekly(Event event, bool (&table)[24][4], wxDateTime date){
-    cout << event.getTitle() << endl;
+    //cout << event.getTitle() << endl;
     int i, j;
 
     bool sameDateFlag = false;
     int repeat = event.getRepeatCount();
-    cout << repeat << endl;
+    //cout << repeat << endl;
     if (repeat < 0)
         repeat = 1;
     if (repeat == 1000)
@@ -307,8 +307,8 @@ void searchTimeSlotWeekly(Event event, bool (&table)[24][4], wxDateTime date){
     for (int i = 0; i < repeat; i++){
         //cout << startDT.FormatISODate()<< endl;
         if (date.IsSameDate(startDT)){
-            cout << "Passed Weekly Test" << endl;
-            cout << date.FormatISODate() << "\n" << endl;
+            //cout << "Passed Weekly Test" << endl;
+            //cout << date.FormatISODate() << "\n" << endl;
             sameDateFlag = true;
             break;
         }
@@ -352,14 +352,14 @@ void searchTimeSlotDaily(Event event, bool (&table)[24][4], wxDateTime date){
 
     bool sameDateFlag = false;
     int repeat = event.getRepeatCount();
-    cout << "number of repeats: " << repeat << endl;
+    //cout << "number of repeats: " << repeat << endl;
     wxDateTime startDT = event.getStart();
     wxDateTime endDT = event.getEnd();
 
     for (int i = 0; i < repeat; i++){
-        cout << startDT.FormatISODate() << endl;
+        //cout << startDT.FormatISODate() << endl;
         if (date.FormatISODate() == startDT.FormatISODate()){
-            cout << "Passed Daily Test" << endl;
+            //cout << "Passed Daily Test" << endl;
             sameDateFlag = true;
             break;
         }
@@ -400,14 +400,14 @@ void searchTimeSlotDaily(Event event, bool (&table)[24][4], wxDateTime date){
 
 void printTable(bool table[24][4]){
     for (int i = 0; i < 24 ; i++){
-        cout << i << '\t';
+        //cout << i << '\t';
         for (int j = 0; j < 4 ; j++){
-            if (table[i][j])
-                cout << 'T' << ' ';
-            else
-                cout << 'F' << ' ';
+            if (table[i][j]){;}
+                //cout << 'T' << ' ';
+            else{;}
+                //cout << 'F' << ' ';
         }
-        cout << '\n';
+        //cout << '\n';
     }
 }
 
@@ -586,8 +586,8 @@ vector<wxDateTime> findValidSlots(bool table[24][4], int duration, wxDateTime da
                     if (freeSlotDuration >= duration){
                         endHour = i;
                         endMinuteIndex = j;
-                        cout << freeSlotDuration << '\t';
-                        cout << startHour << ':' << startMinuteIndex*15 << " to " << endHour << ':' << endMinuteIndex*15 << endl;
+                        //cout << freeSlotDuration << '\t';
+                        //cout << startHour << ':' << startMinuteIndex*15 << " to " << endHour << ':' << endMinuteIndex*15 << endl;
                         validHours.push_back(startHour);
                         validHours.push_back(endHour);
                         validMinutes.push_back(startMinuteIndex*15);
@@ -601,10 +601,10 @@ vector<wxDateTime> findValidSlots(bool table[24][4], int duration, wxDateTime da
     }
 
     for (i = 0; i<validHours.size() ; i++){
-        if (i%2 == 0)
-            cout << "Start at " << validHours[i] << ":" << validMinutes[i] << endl;
-        else
-            cout << "End at " << validHours[i] << ":" << validMinutes[i] << endl;
+        if (i%2 == 0){;}
+            //cout << "Start at " << validHours[i] << ":" << validMinutes[i] << endl;
+        else{;}
+            //cout << "End at " << validHours[i] << ":" << validMinutes[i] << endl;
     }
     for (i = 0; i< validHours.size(); i++){
         buffer = wxDateTime(day, month, year, validHours[i], validMinutes[i]);
