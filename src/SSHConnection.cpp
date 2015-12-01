@@ -169,7 +169,7 @@ int SSHConnection::getCalendars()
     sftp_dir userDir;
     sftp_attributes attributes;
 
-    string userDirLoc = "/gudtimes/user_files/" + session_user;
+    string userDirLoc = "/gudtimes/userfiles/" + session_user;
 
     userDir = sftp_opendir(sftpSession, userDirLoc.c_str());
 
@@ -353,7 +353,7 @@ void SSHConnection::deleteFile(const std::string& fileName)
         throw SSHException("Unable to initialize SFTP session");
     }
 
-    string userDirLoc = "/gudtimes/user_files/" + session_user;
+    string userDirLoc = "/gudtimes/userfiles/" + session_user;
 
     string filePath = userDirLoc + "/" + fileName;
 
@@ -564,7 +564,7 @@ void SSHConnection::getNotifications()
         throw SSHException("Unable to initialize SFTP session");
     }
 
-    string notifyFileLoc = "/gudtimes/user_files/" + session_user + "/notify.txt";
+    string notifyFileLoc = "/gudtimes/userfiles/" + session_user + "/notify.txt";
 
     int access_type = O_RDONLY;
     sftp_file file;
@@ -646,7 +646,7 @@ void SSHConnection::getTimes()
         throw SSHException("Unable to initialize SFTP session");
     }
 
-    string notifyFileLoc = "/gudtimes/user_files/" + session_user + "/found_times.txt";
+    string notifyFileLoc = "/gudtimes/userfiles/" + session_user + "/found_times.txt";
 
     int access_type = O_RDONLY;
     sftp_file file;
