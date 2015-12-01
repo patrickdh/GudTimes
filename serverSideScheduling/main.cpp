@@ -18,7 +18,7 @@ void searchTimeSlotAnnually(Event event, bool (&table)[24][4], wxDateTime date);
 void searchTimeSlotMonthly(Event event, bool (&table)[24][4], wxDateTime date);
 void searchTimeSlotWeekly(Event event, bool (&table)[24][4], wxDateTime date);
 void searchTimeSlotDaily(Event event, bool (&table)[24][4], wxDateTime date);
-void searchTimeSlot(vector<Event> events, int duration, wxDateTime date);
+void searchTimeSlot(vector<Event> events, int duration, wxDateTime date, string user);
 vector<wxDateTime> findValidSlots(bool table[24][4], int duration, wxDateTime date);
 void printTable(bool table[24][4]);
 bool dateComparison(wxDateTime, wxDateTime);
@@ -40,6 +40,7 @@ int main(int argc, char** argv)
         string PATH = all_args[0];
         string durationString = all_args[1];
         string dateString = all_args[2];
+	string currUser = all_args[3];
         //cout << PATH << endl;
         //cout << durationString << endl;
         //cout << dateString << endl;
@@ -82,13 +83,13 @@ int main(int argc, char** argv)
         buffer = Event("Event 5", bufferStart, bufferEnd, FrequencyEnum::WEEKLY, 3);
         events.push_back(buffer);*/
 
-        searchTimeSlot(events, duration, date);
+        searchTimeSlot(events, duration, date, currUser);
     }
 
     return 0;
 }
 
-void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
+void searchTimeSlot(vector<Event> events, int duration, wxDateTime date, string user){
     int numberEvents = events.size();
     int i, j, ei; //ei is the event index
     int s_hour, s_minute;
@@ -170,7 +171,11 @@ void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
     validTimes = findValidSlots(freeTimeTable, duration, date);
     freeSlots = validTimes.size() / 2;
 
-    ofstream output("./data/test.txt");
+	string	outFileName("/gudtimes/userfiles/");
+	outFileName.append(user);
+	outFileName.append("/found_times.txt");
+
+    ofstream output(outFileName.c_str());
     if (output.is_open()){
         output << freeSlots << '\n';
         for (i = 0; i < validTimes.size(); i++){
