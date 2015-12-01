@@ -11,6 +11,7 @@
 #include <wx/msgdlg.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <dirent.h>
 #include <stdio.h>
 #include <windows.h>
@@ -157,6 +158,8 @@ void MainGUI::viewNotificationsButton(wxCommandEvent &event)
                 vector<int> clearedEvents = dialog->getClearedNotifications();
                 NotificationAccess *notAccess = new NotificationAccess(connection);
                 notAccess->clearNotifications(clearedEvents);
+                notifications = NotificationAccess::readNotifications();
+                updateNotificationsFlag();
                 vector<pair<Notification,string>> outNot = dialog->getOutgoingNotifications();
                 typedef vector<pair<Notification, string> > vector_type;
                 for (vector_type::const_iterator pos = outNot.begin();
@@ -272,13 +275,14 @@ void MainGUI::fetchNotifications()
         wxMessageBox(e.what());
     }
 
+    notifications = NotificationAccess::readNotifications();
+
     updateNotificationsFlag();
 }
 
 void MainGUI::updateNotificationsFlag()
 {
-    ifstream inputFile("notify.txt");
-    if ( !inputFile.peek() == ifstream::traits_type::eof() )
+    if (notifications.size() != 0)
     {
         notificationButton->SetOwnBackgroundColour(*wxRED);
 
@@ -292,37 +296,39 @@ void MainGUI::updateNotificationsFlag()
 
 void MainGUI::fetchCalendars()
 {
-    //Confused of purpose here
     calendars.clear();
-    int cals;
-    try {
-        cals = connection->getCalendars();
-    } catch(SSHException &e) {
+     try{
+        connection->getCalendars();
+    }
+    catch (SSHException& e)
+    {
         wxMessageBox(e.what());
     }
-    DIR           *d;
-    struct dirent *dir;
-    vector<string> dirlist;
-    int i=0;
-    d = opendir("./data");
-    if (d)
-    {
-        while ((dir = readdir(d)) != NULL)
-        {
-        i++;
-        cout<<dir->d_name<<endl;
-        dirlist.push_back(dir->d_name);
-        }
-        for (size_t n = 0; n < dirlist.size(); n++)
-            cout << dirlist[ n ] << " ";
-            cout << endl;
 
-        closedir(d);
-    }
+    WIN32_FIND_DATA FindFileData;
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+
+    std::string fileName;
+
+    hFind = FindFirstFile("data\\*", &FindFileData);
+
+    do{
+        fileName = FindFileData.cFileName;
+        std::string filePath("./data\\" + fileName);
+        string extension = filePath.substr(filePath.length()-4,4);
+        if (extension == ".ics"){
+            if (filePath.substr(0,3) == "ro_"){
+                calendars.push_back(Calendar(filePath,false));
+            }
+            else{
+                calendars.push_back(Calendar(filePath,true));
+            }
+        }
+    }while (FindNextFile(hFind, &FindFileData) != 0);
+    FindClose(hFind);
+
     listCalendars();
     drawSchedule();
-
-
 }
 
 void MainGUI::listCalendars()
@@ -348,22 +354,20 @@ void MainGUI::drawSchedule()
 
 void MainGUI::clearLocalData()
 {
-    DIR           *d;
-    struct dirent *dir;
-    vector<string> dirlist;
-    d = opendir("./data");
-    if (d)
-    {
-        while ((dir = readdir(d)) != NULL)
-        {
-        dirlist.push_back(dir->d_name);
-        }
-        for (size_t n = 0; n < dirlist.size(); n++)
-            //remove(dirlist[ n ]);
+    WIN32_FIND_DATA FindFileData;
+    HANDLE hFind = INVALID_HANDLE_VALUE;
 
-        closedir(d);
-    }
+    std::string fileName;
 
+    hFind = FindFirstFile("data\\*", &FindFileData);
+
+    do{
+        fileName = FindFileData.cFileName;
+        std::string filePath("data\\" + fileName);
+        if (fileName != ".gitignore")
+            remove (filePath.c_str());
+    }while (FindNextFile(hFind, &FindFileData) != 0);
+    FindClose(hFind);
 
 }
 
