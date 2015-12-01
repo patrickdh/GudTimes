@@ -68,6 +68,12 @@ vector<Event> ICSAccess::getEvents(){
 
 				} else if (Line.find("DTSTART") == 0) {
 					eventStart = getProperty(Line);
+
+					if (eventStart.length() < 15){
+                        useable = false;
+					}
+					else{
+
 					useable = true;
 
 					string date = eventStart.substr(0,8);
@@ -86,9 +92,15 @@ vector<Event> ICSAccess::getEvents(){
                     if (!WXstart.ParseTime(time.c_str())){
                         useable = false;
                     }
+					}
 
 				} else if (Line.find("DTEND") == 0) {
 					eventEnd = getProperty(Line);
+
+					if (eventEnd.length() < 15){
+                        useable = false;
+					}
+					else{
 
 					string date = eventEnd.substr(0,8);
 
@@ -107,6 +119,7 @@ vector<Event> ICSAccess::getEvents(){
                         useable = false;
                     }
 					hasEnd = true;
+					}
 
 				} else if (Line.find("SUMMARY") == 0) {
 					summary = getProperty(Line);
@@ -171,6 +184,10 @@ vector<Event> ICSAccess::getEvents(){
 int ICSAccess::untilToCount(const string& firstTime, const string& freq, const string& lastTime) const {
     wxDateTime WXstart, WXend;
     wxTimeSpan WXdiff;
+
+    if (firstTime.length() < 15 || lastTime.length() < 15){
+        return -1;
+    }
 
     string date = firstTime.substr(0,8);
 
