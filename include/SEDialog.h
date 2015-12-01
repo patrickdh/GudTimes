@@ -51,9 +51,10 @@ class SEDialog : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnFindTimes( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnFormChange( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnFormChange( wxCalendarEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCreate( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnFormChange( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -65,27 +66,3 @@ class SEDialog : public wxDialog
 		~SEDialog();
 	
 };
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class SEFrame
-///////////////////////////////////////////////////////////////////////////////
-class SEFrame : public wxFrame 
-{
-	private:
-	
-	protected:
-		wxButton* buttonTestDialog;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnClickTestDialog( wxCommandEvent& event ) { event.Skip(); }
-		
-	
-	public:
-		
-		SEFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Test Frame"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-		
-		~SEFrame();
-	
-};
-
-#endif //__SCHEDULEGUI_H__

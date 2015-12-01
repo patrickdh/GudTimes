@@ -185,12 +185,14 @@ void searchTimeSlot(vector<Event> events, int duration, wxDateTime date){
         }
     }
 
-    //cout << freeSlots << endl;
+    cout << freeSlots << endl;
     for (i = 0; i <validTimes.size() ; i++){
-        if (i % 2 == 0){;}
-            //cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << " to ";
-        else{;}
-            //cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << endl;
+        if (i % 2 == 0){
+            cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << " to ";
+        }
+        else{
+            cout << validTimes[i].GetHour() << ":" << validTimes[i].GetMinute() << endl;
+        }
     }
 }
 

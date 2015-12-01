@@ -17,11 +17,12 @@ class ScheduleEventDialog : public SEDialog
         Event getEvent() const;
         std::vector<std::string> getUsers() const;
     protected:
+        void OnFormChange(wxCalendarEvent& event);
         void OnFormChange(wxCommandEvent& event);
         void OnFindTimes(wxCommandEvent& event);
         void OnCreate(wxCommandEvent& event);
         void OnExit(wxCommandEvent& event);
-        wxArrayString generateTimeRanges (vector<wxDateTime>, int duration);
+        void generateTimeRanges (vector<wxDateTime>, int duration);
     private:
         SSHConnection* connection;
         std::string username;

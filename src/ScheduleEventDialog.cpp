@@ -10,6 +10,12 @@
 #endif // WX_PRECOMP
 
 #include "ScheduleEventDialog.h"
+#include "Event.h"
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -20,14 +26,14 @@ ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshcon
     username = user;
 }
 
-Event ScheduleEventDialog::getEvent() const
+Event ScheduleEventDialog::getEvent() const 
 {
-
+    return createdEvent;
 }
 
 std::vector<std::string> ScheduleEventDialog::getUsers() const
 {
-
+    return userList;
 }
 
 void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
@@ -41,10 +47,11 @@ void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
 
 void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
 {
-   //bool validEntries = validateEntries();
-    if (true){
+    if (textboxDuration->GetValue().IsNumber()){
+        eventChoiceList->Clear();
+        buttonCreate->Enable();
+        vector<string> userList;
         vector<wxDateTime> timeSlots;
-        ifstream fileIn;
         string line;
         int numberSlots;
         wxString bufferStart, bufferEnd;
@@ -52,7 +59,6 @@ void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
 
         wxString wxUsers = textboxUsers->GetValue();
         wxString durationString = textboxDuration->GetValue();
-        wxDateTime date = calendarSelect->GetDate();
 
         int duration = wxAtoi(durationString);
 
@@ -68,39 +74,65 @@ void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
         int result = connection.findTimes(userList);
         connection.getTimes();
 
-        ifstream input("./data\\found_times.txt");
+        ifstream fileIn("./data\\found_times.txt");
 
-        //get users and duration, day, month, year to server
-        //server returns path to file (text file probably) of available time slots
-
-        input >> numberSlots;
+        fileIn >> numberSlots;
+        cout << numberSlots << endl;
+        getline(fileIn, line);
         if (numberSlots != 0){
-            while(getline(fileIn, line){
+            while(getline(fileIn, line)){
 
-                bufferStart = line.SubString(0,7);
-                bufferEnd   = line.SubString(9,16);
+                cout << line << endl;
 
-                bufferStartDT.Parse(bufferStart);
-                bufferEndDT.Parse(bufferEnd);
+                bufferStart = line.substr(0,8);
+                bufferEnd   = line.substr(9,8);
+
+                cout << bufferStart << endl;
+                cout << bufferEnd << endl;
+
+
+                bufferStartDT.ParseTime(bufferStart);
+                bufferEndDT.ParseTime(bufferEnd);
 
                 timeSlots.push_back(bufferStartDT);
                 timeSlots.push_back(bufferEndDT);
             }
+
+            generateTimeRanges(timeSlots, duration);
+            //eventChoiceList->InsertItems(generatedTimes);
         } else {
-            //wxMessageBox("No time slots")
+            wxMessageBox( wxT("No availability to book an event."));
         }
-        generateTimeRanges(timeSlots, duration);
+    } else {
+        wxMessageBox(wxT("Please type a duration in numbers of minutes."));
     }
 }
 
-void ScheduleEventDialog::OnCreate(wxCommandEvent& event)
+void ScheduleEventDialog::OnExit( wxCommandEvent& event )
 {
-	wxString startString;
+    EndModal(wxID_CANCEL);
+}
+
+void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
+{
+    eventChoiceList->Clear();
+    buttonCreate->Disable();
+}
+
+void ScheduleEventDialog::OnFormChange(wxCalendarEvent& event){
+    eventChoiceList->Clear();
+    buttonCreate->Disable();
+}
+
+void ScheduleEventDialog::OnCreate( wxCommandEvent& event )
+{
+wxString startString;
 wxString endString;
 wxDateTime date = calendarSelect->GetDate();
 wxDateTime startDT = date;
 wxDateTime endDT = date;
 wxString choice = eventChoiceList->GetString(eventChoiceList->GetSelection());
+string details = textboxEventName->GetValue().mb_str();
 
 startString = choice.SubString(0,7);
 endString   = choice.SubString(9,16);
@@ -108,20 +140,14 @@ endString   = choice.SubString(9,16);
 startDT.ParseTime(startString);
 endDT.ParseTime(endString);
 
-createdEvent = Event (textboxEventName.GetLineText(), startDT, endDT);
-
+createdEvent = Event(details, startDT, endDT);
 }
 
-void ScheduleEventDialog::OnExit(wxCommandEvent& event)
-{
-    Close();
-}
-
-wxArrayString ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int duration){
+void ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int duration){
     int i;
-    int sMin, eMin;
-    int sHour, eHour;
-    int cHour, cMin;
+    int sMin, eMin; //starting time and ending time in minutes
+    int sHour; //current hour
+    int cMin; //current time in minutes
     int hourAdjust, minuteAdjust;
     wxDateTime bufferDT(0,0,0);
 
@@ -133,9 +159,7 @@ wxArrayString ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int
         eMin = vt[i+1].GetMinute() + vt[i+1].GetHour()*60;
 
         sHour = vt[i].GetHour();
-        eHour = vt[i+1].GetHour();
 
-        cHour = sHour;
         cMin = sMin;
 
         hourAdjust = (int)(duration / 60);
@@ -144,14 +168,19 @@ wxArrayString ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int
         while ((eMin - cMin) >= duration){
             bufferDT.SetHour(vt[i].GetHour());
             bufferDT.SetMinute(vt[i].GetMinute());
+            bufferDT.SetSecond(0);
 
             buffer << bufferDT.FormatISOTime();
 
-            bufferDT.SetHour(vt[i].GetHour() + hourAdjust);
-            bufferDT.SetMinute(vt[i].GetMinute() + minuteAdjust);
+            if ((vt[i].GetMinute() + minuteAdjust) >= 60)
+                bufferDT.SetHour(vt[i].GetHour() + 1 + hourAdjust);
+            else
+                bufferDT.SetHour(vt[i].GetHour() + hourAdjust);
+            bufferDT.SetMinute((vt[i].GetMinute() + minuteAdjust) % 60);
+            bufferDT.SetSecond(0);
 
             buffer << "-" << bufferDT.FormatISOTime();
-            listItems.Add(buffer);
+            eventChoiceList->Append(buffer);
 
             buffer.clear();
 
@@ -161,6 +190,4 @@ wxArrayString ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int
             cMin += 15;
         }
     }
-    return listItems;
 }
-
