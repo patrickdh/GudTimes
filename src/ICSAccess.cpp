@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -331,6 +332,8 @@ void ICSAccess::addEvent(const Event& eventToAdd)
 
     while (getline(original,line))
     {
+        line.erase(remove(line.begin(),line.end(),'\n'),line.end());
+        line.erase(remove(line.begin(),line.end(),'\r'),line.end());
         if (line.find("BEGIN:VEVENT") == 0 && written == false)
         {
             temp << "BEGIN:VEVENT" << endl;
@@ -342,7 +345,7 @@ void ICSAccess::addEvent(const Event& eventToAdd)
             startTime.erase(13,1);
             startTime.erase(7,1);
             startTime.erase(4,1);
-            temp << "DTSTART:" << startTime << endl;
+            temp << "DTSTART;TZID=Eastern Standard Time:" << startTime << endl;
             string endTime = eventToAdd.getEnd().FormatISODate().mb_str();
             endTime.append("T");
             endTime.append(eventToAdd.getEnd().FormatISOTime().mb_str());
@@ -351,7 +354,7 @@ void ICSAccess::addEvent(const Event& eventToAdd)
             endTime.erase(13,1);
             endTime.erase(7,1);
             endTime.erase(4,1);
-            temp << "DTEND:" << endTime << endl;
+            temp << "DTEND;TZID=Eastern Standard Time:" << endTime << endl;
             if (eventToAdd.getFrequency() != FrequencyEnum::NONE)
             {
                 if (eventToAdd.getFrequency() == FrequencyEnum::DAILY)
@@ -384,10 +387,12 @@ void ICSAccess::deleteEvent(int eventNum)
     ifstream original(filename);
     ofstream temp("./data/temp.txt");
     string line;
-    int eventCount;
+    int eventCount = -1;
 
     while(getline(original,line))
     {
+        line.erase(remove(line.begin(),line.end(),'\n'),line.end());
+        line.erase(remove(line.begin(),line.end(),'\r'),line.end());
         if (line.find("BEGIN:VEVENT") == 0)
         {
             eventCount++;

@@ -72,7 +72,7 @@ void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
             }
         }
 
-        int result = connection->findTimes(userList,duration);
+        int result = connection->findTimes(userList,duration, calendarSelect->GetDate().FormatISODate().mb_str());
         connection->getTimes();
 
         ifstream fileIn("./data\\found_times.txt");
@@ -159,7 +159,9 @@ void ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int duration
     for (i = 0; i < vt.size(); i+=2){
         sMin = vt[i].GetMinute() + vt[i].GetHour()*60;
         eMin = vt[i+1].GetMinute() + vt[i+1].GetHour()*60;
-
+        if(eMin == 0) {
+            eMin = 23*60+59;
+        }
         sHour = vt[i].GetHour();
 
         cMin = sMin;

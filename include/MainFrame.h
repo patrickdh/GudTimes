@@ -16,19 +16,20 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/textctrl.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/panel.h>
-#include <wx/frame.h>
 #include <wx/statline.h>
+#include <wx/button.h>
 #include <wx/calctrl.h>
 #include <wx/listbox.h>
+#include <wx/sizer.h>
+#include <wx/panel.h>
+#include <wx/textctrl.h>
 #include <wx/gbsizer.h>
 #include <wx/scrolwin.h>
 #include <wx/splitter.h>
+#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
+
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class MainFrame
@@ -38,12 +39,15 @@ class MainFrame : public wxFrame
 	private:
 
 	protected:
+	    wxGridBagSizer* gbSizer1;
+        wxGridBagSizer* gbSizer41;
+        wxGridBagSizer* gbSizer3;
 		wxSplitterWindow* m_splitter3;
 		wxPanel* m_panel5;
 		wxStaticText* m_staticText451;
 		wxStaticLine* m_staticline42;
 		wxButton* m_button11;
-		wxCalendarCtrl* m_calendar3;
+		wxCalendarCtrl* datePicker;
 		wxButton* m_button10;
 		wxButton* m_button2;
 		wxStaticText* m_staticText46;
@@ -53,6 +57,7 @@ class MainFrame : public wxFrame
 		wxButton* m_button7;
 		wxButton* m_button8;
 		wxButton* notificationButton;
+		wxButton* LogoutButton;
 		wxPanel* m_panel41;
 		wxPanel* m_panel4;
 		wxStaticLine* m_staticline267;
@@ -318,13 +323,16 @@ class MainFrame : public wxFrame
 		virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void refreshButton( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onDateSelect( wxCalendarEvent& event ) { event.Skip(); }
 		virtual void addCalendarButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void addCalendarURLButton( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onCalendarSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void deleteCalendarButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void addEventButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void scheduleEventButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void deleteEventButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void viewNotificationsButton( wxCommandEvent& event ) { event.Skip(); }
+		virtual void logoutButton( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

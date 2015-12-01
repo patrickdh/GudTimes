@@ -17,6 +17,8 @@
 
 #include "MainFrame.h"
 
+///////////////////////////////////////////////////////////////////////////
+
 MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxSize( 1170,-1 ), wxDefaultSize );
@@ -54,8 +56,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 
 	bSizer3->Add( m_button11, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-	m_calendar3 = new wxCalendarCtrl( m_panel5, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxCAL_SHOW_HOLIDAYS );
-	bSizer3->Add( m_calendar3, 0, wxALL, 5 );
+	datePicker = new wxCalendarCtrl( m_panel5, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxCAL_MONDAY_FIRST|wxCAL_SHOW_HOLIDAYS );
+	bSizer3->Add( datePicker, 0, wxALL, 5 );
 
 	m_button10 = new wxButton( m_panel5, wxID_ANY, wxT("Add Calendar"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button10->SetFont( wxFont( 9, 74, 90, 90, false, wxT("Century Gothic") ) );
@@ -100,6 +102,14 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	notificationButton->SetFont( wxFont( 9, 74, 90, 90, false, wxT("Century Gothic") ) );
 
 	bSizer3->Add( notificationButton, 0, wxALL, 5 );
+
+
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	LogoutButton = new wxButton( m_panel5, wxID_ANY, wxT("Logout"), wxDefaultPosition, wxDefaultSize, 0 );
+	LogoutButton->SetFont( wxFont( 9, 74, 90, 90, false, wxT("Century Gothic") ) );
+
+	bSizer3->Add( LogoutButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
 
 	m_panel5->SetSizer( bSizer3 );
@@ -255,10 +265,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	gbSizer1->SetFlexibleDirection( wxBOTH );
 	gbSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	mon00 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxT("9:30 - 9:50: ASTR 101 \n dfdfdfdfdfdddddddddddddddddddddddd"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
+	mon00 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	mon00->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Arial") ) );
 	mon00->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
-	mon00->SetBackgroundColour( wxColour( 157, 249, 244 ) );
+	mon00->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
 
 	gbSizer1->Add( mon00, wxGBPosition( 2, 2 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT|wxTOP, 5 );
 
@@ -337,6 +347,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	gbSizer1->Add( m_staticline257, wxGBPosition( 49, 0 ), wxGBSpan( 1, 15 ), wxEXPAND, 5 );
 
 	tues00 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
+	tues00->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+
 	gbSizer1->Add( tues00, wxGBPosition( 2, 4 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	wed00 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
@@ -579,7 +591,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	gbSizer1->Add( mon01, wxGBPosition( 4, 2 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	mon02 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
-	gbSizer1->Add( mon02, wxGBPosition( 6, 2 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	gbSizer1->Add( mon02, wxGBPosition( 6, 2 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	tues02 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( tues02, wxGBPosition( 6, 4 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
@@ -750,13 +762,13 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	gbSizer1->Add( sat08, wxGBPosition( 18, 12 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	sun08 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
-	gbSizer1->Add( sun08, wxGBPosition( 18, 14 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	gbSizer1->Add( sun08, wxGBPosition( 18, 14 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	mon09 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( mon09, wxGBPosition( 20, 2 ), wxGBSpan( 1, 1 ), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	tues09 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
-	gbSizer1->Add( tues09, wxGBPosition( 20, 4 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	gbSizer1->Add( tues09, wxGBPosition( 20, 4 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	wed09 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( wed09, wxGBPosition( 20, 6 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
@@ -929,7 +941,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sun19 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( sun19, wxGBPosition( 40, 14 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
-	mon20 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
+	mon20 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( mon20, wxGBPosition( 42, 2 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	tues20 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
@@ -950,7 +962,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sun20 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( sun20, wxGBPosition( 42, 14 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
-	mon21 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
+	mon21 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
 	gbSizer1->Add( mon21, wxGBPosition( 44, 2 ), wxGBSpan( 1, 1 ), wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
 	tues21 = new wxTextCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER );
@@ -1153,13 +1165,17 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( MainFrame::OnActivate ) );
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	m_button11->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::refreshButton ), NULL, this );
+	datePicker->Connect( wxEVT_CALENDAR_DAY_CHANGED, wxCalendarEventHandler( MainFrame::onDateSelect ), NULL, this );
+	datePicker->Connect( wxEVT_CALENDAR_SEL_CHANGED, wxCalendarEventHandler( MainFrame::onDateSelect ), NULL, this );
 	m_button10->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::addCalendarButton ), NULL, this );
 	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::addCalendarURLButton ), NULL, this );
+	calendarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( MainFrame::onCalendarSelect ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::deleteCalendarButton ), NULL, this );
 	m_button6->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::addEventButton ), NULL, this );
 	m_button7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::scheduleEventButton ), NULL, this );
 	m_button8->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::deleteEventButton ), NULL, this );
 	notificationButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::viewNotificationsButton ), NULL, this );
+	LogoutButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::logoutButton ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -1168,12 +1184,16 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( MainFrame::OnActivate ) );
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame::OnClose ) );
 	m_button11->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::refreshButton ), NULL, this );
+	datePicker->Disconnect( wxEVT_CALENDAR_DAY_CHANGED, wxCalendarEventHandler( MainFrame::onDateSelect ), NULL, this );
+	datePicker->Disconnect( wxEVT_CALENDAR_SEL_CHANGED, wxCalendarEventHandler( MainFrame::onDateSelect ), NULL, this );
 	m_button10->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::addCalendarButton ), NULL, this );
 	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::addCalendarURLButton ), NULL, this );
+	calendarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( MainFrame::onCalendarSelect ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::deleteCalendarButton ), NULL, this );
 	m_button6->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::addEventButton ), NULL, this );
 	m_button7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::scheduleEventButton ), NULL, this );
 	m_button8->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::deleteEventButton ), NULL, this );
 	notificationButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::viewNotificationsButton ), NULL, this );
+	LogoutButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::logoutButton ), NULL, this );
 
 }

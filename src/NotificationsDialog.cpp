@@ -26,8 +26,10 @@ NotificationsDialog::NotificationsDialog(wxWindow* parent, const std::vector<Not
             a = notices[i].getFrom();
             a.Append(" sent you an invite to \"");
             a.Append(notices[i].getEvent().getTitle());
-            a.Append("\" from ");
             Event evnt = notices[i].getEvent();
+            a.Append("\" on ");
+            a.Append(evnt.getStart().FormatISODate());
+            a.Append(" from ");
             a.Append(evnt.getStart().FormatISOTime());
             a.Append(" - ");
             a.Append(evnt.getEnd().FormatISOTime());
@@ -68,7 +70,7 @@ void NotificationsDialog::onAcceptButton(wxCommandEvent& event)
     clearedNotifications.push_back(notificationsListBox->GetSelection());
     eventsToAdd.push_back(notificationData[notificationsListBox->GetSelection()].getEvent());
     Notification declineNotif(username,NotificationTypeEnum::ACCEPTEDEVENT,notificationData[notificationsListBox->GetSelection()].getEvent());
-    notificationsToSend.push_back(std::pair<Notification,string>(declineNotif,"ACCEPT"));
+    notificationsToSend.push_back(std::pair<Notification,string>(declineNotif,notificationData[notificationsListBox->GetSelection()].getFrom()));
     notificationData.erase(notificationData.begin() + notificationsListBox->GetSelection());
     acceptButton->Enable(false);
     dismissButton->Enable(false);
@@ -80,7 +82,7 @@ void NotificationsDialog::onDeclineButton(wxCommandEvent& event)
 {
     clearedNotifications.push_back(notificationsListBox->GetSelection());
     Notification declineNotif(username,NotificationTypeEnum::DECLINEDEVENT,notificationData[notificationsListBox->GetSelection()].getEvent());
-    notificationsToSend.push_back(std::pair<Notification,string>(declineNotif,"DECLINE"));
+    notificationsToSend.push_back(std::pair<Notification,string>(declineNotif,notificationData[notificationsListBox->GetSelection()].getFrom()));
     notificationData.erase(notificationData.begin() + notificationsListBox->GetSelection());
     acceptButton->Enable(false);
     dismissButton->Enable(false);

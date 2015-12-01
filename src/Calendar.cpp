@@ -18,7 +18,7 @@ void Calendar::addEvent(const Event& event)
         throw ReadOnlyException(temp);
     }
     ics.addEvent(event);
-    events.push_back(event);
+    events.insert(events.begin(),event);
 }
 
 void Calendar::deleteEvent(int indexToDelete)

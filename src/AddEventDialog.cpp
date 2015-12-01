@@ -32,25 +32,29 @@ void AddEventDialog::onOK(wxCommandEvent& event)
     {
        title = eventTitle->GetValue();
     }
-    else
+    else{
         wxMessageBox("Must input valid title");
+        return;
+    }
     wxDateTime eventSDate = DatePicker->GetValue();
     wxDateTime eventEDate = DatePicker->GetValue();
     int i = eventStart->GetSelection();
     wxString startT = eventStart->GetString(i);
-    unsigned short hour = wxAtoi(startT(0,1));
-    unsigned short minute = wxAtoi(startT(3,4));
+    unsigned short hour = wxAtoi(startT(0,2));
+    unsigned short minute = wxAtoi(startT(3,2));
     eventSDate.SetHour(hour);
     eventSDate.SetMinute(minute);
 
     int j = eventEnd->GetSelection();
     wxString endTime = eventEnd->GetString(j);
-    unsigned short ehour = wxAtoi(endTime(0,1));
-    unsigned short eminute = wxAtoi(endTime(3,4));
+    unsigned short ehour = wxAtoi(endTime(0,2));
+    unsigned short eminute = wxAtoi(endTime(3,2));
     eventEDate.SetHour(ehour);
     eventEDate.SetMinute(eminute);
-    if (eventEDate.IsLaterThan(eventSDate)!= TRUE)
+    if (eventEDate.IsLaterThan(eventSDate)!= TRUE){
         wxMessageBox("End time must be later than start time");
+        return;
+    }
 
     int k = eventFrequency->GetSelection();
     wxString frequency = eventFrequency->GetString(k);
@@ -77,7 +81,7 @@ void AddEventDialog::onOK(wxCommandEvent& event)
     if (freq == FrequencyEnum::NONE)
         createdEvent = Event(title, eventSDate, eventEDate);
     else
-    createdEvent = Event(title, eventSDate, eventEDate, freq, repeat);
+        createdEvent = Event(title, eventSDate, eventEDate, freq, repeat);
 
     EndModal(wxID_OK);
 

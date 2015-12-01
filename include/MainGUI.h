@@ -30,12 +30,13 @@ class MainGUI: public MainFrame
         void deleteCalendarButton(wxCommandEvent& event);
         void logoutButton(wxCommandEvent& event);
         void onCalendarSelect(wxCommandEvent& event);
-        void onDateSelect(wxCommandEvent& event);
+        void onDateSelect(wxCalendarEvent& event);
     private:
         SSHConnection* connection;
         std::string username;
         std::vector<Calendar> calendars;
         std::vector<Notification> notifications;
+        std::vector<wxTextCtrl*> displayVect;
         void fetchNotifications();
         void updateNotificationsFlag();
         void fetchCalendars();

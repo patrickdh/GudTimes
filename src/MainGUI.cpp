@@ -31,6 +31,176 @@ using namespace std;
 MainGUI::MainGUI(wxWindow *frame, SSHConnection *conn, const std::string& uname)
     : MainFrame(frame)
 {
+    {
+        displayVect.push_back(sun00);
+        displayVect.push_back(sun01);
+        displayVect.push_back(sun02);
+        displayVect.push_back(sun03);
+        displayVect.push_back(sun04);
+        displayVect.push_back(sun05);
+        displayVect.push_back(sun06);
+        displayVect.push_back(sun07);
+        displayVect.push_back(sun08);
+        displayVect.push_back(sun09);
+        displayVect.push_back(sun10);
+        displayVect.push_back(sun11);
+        displayVect.push_back(sun12);
+        displayVect.push_back(sun13);
+        displayVect.push_back(sun14);
+        displayVect.push_back(sun15);
+        displayVect.push_back(sun16);
+        displayVect.push_back(sun17);
+        displayVect.push_back(sun18);
+        displayVect.push_back(sun19);
+        displayVect.push_back(sun20);
+        displayVect.push_back(sun21);
+        displayVect.push_back(sun22);
+        displayVect.push_back(sun23);
+        displayVect.push_back(mon00);
+        displayVect.push_back(mon01);
+        displayVect.push_back(mon02);
+        displayVect.push_back(mon03);
+        displayVect.push_back(mon04);
+        displayVect.push_back(mon05);
+        displayVect.push_back(mon06);
+        displayVect.push_back(mon07);
+        displayVect.push_back(mon08);
+        displayVect.push_back(mon09);
+        displayVect.push_back(mon10);
+        displayVect.push_back(mon11);
+        displayVect.push_back(mon12);
+        displayVect.push_back(mon13);
+        displayVect.push_back(mon14);
+        displayVect.push_back(mon15);
+        displayVect.push_back(mon16);
+        displayVect.push_back(mon17);
+        displayVect.push_back(mon18);
+        displayVect.push_back(mon19);
+        displayVect.push_back(mon20);
+        displayVect.push_back(mon21);
+        displayVect.push_back(mon22);
+        displayVect.push_back(mon23);
+        displayVect.push_back(tues00);
+        displayVect.push_back(tues01);
+        displayVect.push_back(tues02);
+        displayVect.push_back(tues03);
+        displayVect.push_back(tues04);
+        displayVect.push_back(tues05);
+        displayVect.push_back(tues06);
+        displayVect.push_back(tues07);
+        displayVect.push_back(tues08);
+        displayVect.push_back(tues09);
+        displayVect.push_back(tues10);
+        displayVect.push_back(tues11);
+        displayVect.push_back(tues12);
+        displayVect.push_back(tues13);
+        displayVect.push_back(tues14);
+        displayVect.push_back(tues15);
+        displayVect.push_back(tues16);
+        displayVect.push_back(tues17);
+        displayVect.push_back(tues18);
+        displayVect.push_back(tues19);
+        displayVect.push_back(tues20);
+        displayVect.push_back(tues21);
+        displayVect.push_back(tues22);
+        displayVect.push_back(tues23);
+        displayVect.push_back(wed00);
+        displayVect.push_back(wed01);
+        displayVect.push_back(wed02);
+        displayVect.push_back(wed03);
+        displayVect.push_back(wed04);
+        displayVect.push_back(wed05);
+        displayVect.push_back(wed06);
+        displayVect.push_back(wed07);
+        displayVect.push_back(wed08);
+        displayVect.push_back(wed09);
+        displayVect.push_back(wed10);
+        displayVect.push_back(wed11);
+        displayVect.push_back(wed12);
+        displayVect.push_back(wed13);
+        displayVect.push_back(wed14);
+        displayVect.push_back(wed15);
+        displayVect.push_back(wed16);
+        displayVect.push_back(wed17);
+        displayVect.push_back(wed18);
+        displayVect.push_back(wed19);
+        displayVect.push_back(wed20);
+        displayVect.push_back(wed21);
+        displayVect.push_back(wed22);
+        displayVect.push_back(wed23);
+        displayVect.push_back(thurs00);
+        displayVect.push_back(thurs01);
+        displayVect.push_back(thurs02);
+        displayVect.push_back(thurs03);
+        displayVect.push_back(thurs04);
+        displayVect.push_back(thurs05);
+        displayVect.push_back(thurs06);
+        displayVect.push_back(thurs07);
+        displayVect.push_back(thurs08);
+        displayVect.push_back(thurs09);
+        displayVect.push_back(thurs10);
+        displayVect.push_back(thurs11);
+        displayVect.push_back(thurs12);
+        displayVect.push_back(thurs13);
+        displayVect.push_back(thurs14);
+        displayVect.push_back(thurs15);
+        displayVect.push_back(thurs16);
+        displayVect.push_back(thurs17);
+        displayVect.push_back(thurs18);
+        displayVect.push_back(thurs19);
+        displayVect.push_back(thurs20);
+        displayVect.push_back(thurs21);
+        displayVect.push_back(thurs22);
+        displayVect.push_back(thurs23);
+        displayVect.push_back(fri00);
+        displayVect.push_back(fri01);
+        displayVect.push_back(fri02);
+        displayVect.push_back(fri03);
+        displayVect.push_back(fri04);
+        displayVect.push_back(fri05);
+        displayVect.push_back(fri06);
+        displayVect.push_back(fri07);
+        displayVect.push_back(fri08);
+        displayVect.push_back(fri09);
+        displayVect.push_back(fri10);
+        displayVect.push_back(fri11);
+        displayVect.push_back(fri12);
+        displayVect.push_back(fri13);
+        displayVect.push_back(fri14);
+        displayVect.push_back(fri15);
+        displayVect.push_back(fri16);
+        displayVect.push_back(fri17);
+        displayVect.push_back(fri18);
+        displayVect.push_back(fri19);
+        displayVect.push_back(fri20);
+        displayVect.push_back(fri21);
+        displayVect.push_back(fri22);
+        displayVect.push_back(fri23);
+        displayVect.push_back(sat00);
+        displayVect.push_back(sat01);
+        displayVect.push_back(sat02);
+        displayVect.push_back(sat03);
+        displayVect.push_back(sat04);
+        displayVect.push_back(sat05);
+        displayVect.push_back(sat06);
+        displayVect.push_back(sat07);
+        displayVect.push_back(sat08);
+        displayVect.push_back(sat09);
+        displayVect.push_back(sat10);
+        displayVect.push_back(sat11);
+        displayVect.push_back(sat12);
+        displayVect.push_back(sat13);
+        displayVect.push_back(sat14);
+        displayVect.push_back(sat15);
+        displayVect.push_back(sat16);
+        displayVect.push_back(sat17);
+        displayVect.push_back(sat18);
+        displayVect.push_back(sat19);
+        displayVect.push_back(sat20);
+        displayVect.push_back(sat21);
+        displayVect.push_back(sat22);
+        displayVect.push_back(sat23);
+    }
     connection = conn;
     username = uname;
     wxCommandEvent dummy;
@@ -71,6 +241,9 @@ void MainGUI::addEventButton(wxCommandEvent &event)
             AddEventDialog *dialog = new AddEventDialog(this);
             if (dialog->ShowModal() == wxID_OK) {
                    calendars.at(cldrList.Item(0)).addEvent(dialog->getEvent());
+                   string fileName = calendars.at(cldrList.Item(0)).getFileName();
+                wxFileName calName(fileName);
+                connection->uploadFile(calName);
                    drawSchedule();
             }
         }
@@ -153,7 +326,13 @@ void MainGUI::viewNotificationsButton(wxCommandEvent &event)
             NotificationsDialog *dialog = new NotificationsDialog(this,notifications,username);
             if (dialog->ShowModal() == wxID_OK) {
                 vector<Event> events = dialog->getEvents();
-                //add each to calendar
+                for(auto event : events){
+                    calendars.at(cldrList.Item(0)).addEvent(event);
+                }
+                string fileName = calendars.at(cldrList.Item(0)).getFileName();
+                wxFileName calName(fileName);
+                connection->uploadFile(calName);
+
                 vector<int> clearedEvents = dialog->getClearedNotifications();
                 NotificationAccess *notAccess = new NotificationAccess(connection);
                 notAccess->clearNotifications(clearedEvents);
@@ -261,7 +440,7 @@ void MainGUI::onCalendarSelect(wxCommandEvent &event)
     drawSchedule();
 }
 
-void MainGUI::onDateSelect(wxCommandEvent &event)
+void MainGUI::onDateSelect(wxCalendarEvent &event)
 {
     drawSchedule();
 }
@@ -348,6 +527,153 @@ void MainGUI::listCalendars()
 
 void MainGUI::drawSchedule()
 {
+    wxFont font = time02->GetFont();
+    for (unsigned int i = 0 ; i < displayVect.size(); ++i){
+        displayVect.at(i)->Clear();
+        displayVect.at(i)->SetBackgroundColour(wxColour(255,255,255));
+        displayVect.at(i)->SetFont(font);
+    }
+
+    wxDateTime selDate = datePicker->GetDate();
+    wxDateSpan oneDay(0,0,0,1);
+    wxDateTime wkStart(selDate);
+    wxDateTime wkEnd;
+    while (wkStart.GetWeekDay() != wxDateTime::WeekDay::Mon){
+        wkStart.Subtract(oneDay);
+    }
+    wkEnd = wkStart + 7*oneDay;
+
+    for (unsigned int i = 0 ; i < calendars.size(); ++i)
+    {
+        if (calendarList->IsSelected(i))
+        {
+            vector<Event> events = calendars.at(i).getEvents();
+            for (unsigned int i = 0; i < events.size(); ++i)
+            {
+                wxDateTime evStart = events.at(i).getStart();
+                wxDateTime evEnd = events.at(i).getEnd();
+                FrequencyEnum evFreq = events.at(i).getFrequency();
+                int evCount = events.at(i).getRepeatCount();
+                if ( evFreq != FrequencyEnum::NONE)
+                {
+                    if (evFreq == FrequencyEnum::DAILY)
+                    {
+                        wxDateSpan oneDay(0,0,0,1);
+                        do
+                        {
+                            if ((evStart.IsBetween(wkStart,wkEnd) && evEnd.IsBetween(wkStart,wkEnd)) || evStart.IsLaterThan(wkEnd))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                evStart += oneDay;
+                                evEnd += oneDay;
+                                evCount--;
+                            }
+                        }
+                        while(evCount >= 0);
+                    }
+                    else if (evFreq == FrequencyEnum::WEEKLY)
+                    {
+                        wxDateSpan oneWeek(0,0,1,0);
+                        do
+                        {
+                            if ((evStart.IsBetween(wkStart,wkEnd) && evEnd.IsBetween(wkStart,wkEnd)) || evStart.IsLaterThan(wkEnd))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                evStart += oneWeek;
+                                evEnd += oneWeek;
+                                evCount--;
+                            }
+                        }
+                        while(evCount >= 0);
+                        if (evCount == -1){
+                            evStart = wxDateTime();
+                            evEnd = wxDateTime();
+                        }
+                    }
+                    else if (evFreq == FrequencyEnum::MONTHLY)
+                    {
+                        wxDateSpan oneMonth(0,1,0,0);
+                        do
+                        {
+                            if ((evStart.IsBetween(wkStart,wkEnd) && evEnd.IsBetween(wkStart,wkEnd)) || evStart.IsLaterThan(wkEnd))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                evStart += oneMonth;
+                                evEnd += oneMonth;
+                                evCount--;
+                            }
+                        }
+                        while(evCount >= 0);
+                    }
+                    else if (evFreq == FrequencyEnum::ANNUALLY)
+                    {
+                        wxDateSpan oneYear(1,0,0,0);
+                        do
+                        {
+                            if ((evStart.IsBetween(wkStart,wkEnd) && evEnd.IsBetween(wkStart,wkEnd)) || evStart.IsLaterThan(wkEnd))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                evStart += oneYear;
+                                evEnd += oneYear;
+                                evCount--;
+                            }
+                        }
+                        while(evCount >= 0);
+                    }
+                }
+                bool done = true;
+                do
+                {
+                    if (evStart.IsBetween(wkStart,wkEnd) && evEnd.IsBetween(wkStart,wkEnd))
+                    {
+                        done = true;
+                        int Sday = (int) events.at(i).getStart().GetWeekDay();
+                        int Shour = events.at(i).getStart().GetHour();
+                        int Eday = (int) events.at(i).getEnd().GetWeekDay();
+                        int Ehour = events.at(i).getEnd().GetHour();
+                        int Sindex = Sday*24+Shour;
+                        int Eindex = Eday*24+Ehour;
+                        for (int j = Sindex ; j <= Eindex ; ++j)
+                        {
+                            if (j == Eindex && events.at(i).getEnd().GetMinute() == 0)
+                            {
+                                break;
+                            }
+                            string info;
+                            info.append(events.at(i).getTitle());
+                            info.append("\n");
+                            info.append(events.at(i).getStart().Format("%H:%M"));
+                            info.append(" - ");
+                            info.append(events.at(i).getEnd().Format("%H:%M"));
+                            displayVect.at(j)->SetValue(info.c_str());
+                            displayVect.at(j)->SetBackgroundColour(wxColour(157,249,244));
+                        }
+                        if (evFreq == FrequencyEnum::DAILY && evCount > 0)
+                        {
+                            done = false;
+                            wxDateSpan oneDay(0,0,0,1);
+                            evCount--;
+                            evStart += oneDay;
+                            evEnd += oneDay;
+                        }
+                    }
+
+                }while(!done);
+            }
+        }
+    }
 
 }
 
