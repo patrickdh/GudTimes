@@ -56,3 +56,16 @@ Process for setting up wxWidgets for CodeBlocks
 21. Click Ok on both windows.
 
 22. Add libraries as needed by right clicking project and selecting build options, adding .a files to linker settings, adding include (.h) directories to search directories->Compiler, and adding library directory to search directories->Linker (e.g. libssh)
+
+<h2>References</h2>
+wxWidgets 2.8.12 Reference Documentation: http://docs.wxwidgets.org/2.8/
+Code::Blocks Reference Documentation: http://www.codeblocks.org/user-manual
+iCalendar information: https://en.wikipedia.org/wiki/ICalendar
+
+<h2> Contributors List</h2>
+Ryan Baxter (Lead System Architect and Backend Developer)
+Patrick Dang-Ho (Full Stack Developer)
+Ben Grady (Team Manager and Backend developer)
+Kyle MacNeil (Frontend Developer)
+Thomas Rossetti (Frontend Developer)
+Ben Wright (Backend Developer) 
