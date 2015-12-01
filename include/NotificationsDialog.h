@@ -22,7 +22,7 @@ class NotificationsDialog : public NDialog
         void onAcceptButton(wxCommandEvent& event);
         void onDeclineButton(wxCommandEvent& event);
         void onDismissButton(wxCommandEvent& event);
-        void onSelection(wxCommandEvent& event);
+        void OnSelection(wxCommandEvent& event);
         void onOK(wxCommandEvent& event);
         void onCancel(wxCommandEvent& event);
     private:
