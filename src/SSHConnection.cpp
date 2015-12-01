@@ -283,82 +283,56 @@ int SSHConnection::getCalendars()
 
 void SSHConnection::uploadFile(const wxFileName& fileName)
 {
-    ssh_session currSession = session.getCSession();
+    ssh_session cSession = session.getCSession();
+    ssh_scp scp;
     int rc;
-
-    sftp_session sftpSession = sftp_new(currSession);
-    if (sftpSession == NULL)
+    string dir = "/gudtimes/userfiles/";
+    dir.append(session_user);
+    scp = ssh_scp_new(cSession, SSH_SCP_WRITE | SSH_SCP_RECURSIVE, dir.c_str());
+    if (scp == NULL)
     {
-        throw SSHException("Unable to allocate SFTP session");
+        throw SSHException("Error allocating scp session");
     }
-
-    rc = sftp_init(sftpSession);
+    rc = ssh_scp_init(scp);
     if (rc != SSH_OK)
     {
-        sftp_free(sftpSession);
-        throw SSHException("Unable to initialize SFTP session");
+        const char* msg = ssh_get_error(cSession);
+        ssh_scp_free(scp);
+        throw SSHException("Error initializing scp session");
     }
 
-    string userDirLoc = "/" + session_user;
-
-    int access_type = O_WRONLY | O_CREAT | O_TRUNC;
-    sftp_file file;
-    int nwritten;
-
-    string filePath = userDirLoc + "/" + fileName.GetFullName().mb_str();
-
-    file = sftp_open(sftpSession, filePath.c_str(), access_type, S_IRWXU);
-    if (file == NULL)
-    {
-        string error(ssh_get_error(currSession));
-        sftp_free(sftpSession);
-        throw SSHException("Can't open file for writing (server)");
-    }
-
-    ifstream inFile(fileName.GetFullPath().mb_str());
+    ifstream inFile(fileName.GetFullPath().mb_str(),ios::binary);
     if (!inFile)
     {
-        sftp_close(file);
-        sftp_free(sftpSession);
+        ssh_scp_free(scp);
         throw SSHException("Can't open file for reading (client)");
     }
 
-    stringstream ss;
-    ss << inFile.rdbuf();
-    string fileData = ss.str();
+    inFile.seekg(0,ios::end);
+    ios::pos_type length = inFile.tellg();
+    inFile.seekg(0);
 
-    if (!inFile)
-    {
-        sftp_close(file);
-        sftp_free(sftpSession);
-        throw SSHException("Error reading file");
-    }
+    char* buf = new char[length];
+    inFile.read(buf,length);
 
-    nwritten = sftp_write(file,fileData.c_str(),fileData.length());
+    string fileName2(fileName.GetFullName().mb_str());
 
-    if ( (unsigned int)nwritten != fileData.length())
-    {
-        string error(ssh_get_error(currSession));
-        sftp_close(file);
-        sftp_free(sftpSession);
-        throw SSHException("Error writing file");
-    }
-
-    inFile.close();
-    if (!inFile)
-    {
-        sftp_close(file);
-        sftp_free(sftpSession);
-        throw SSHException("Error closing file (client)");
-    }
-
-    rc = sftp_close(file);
+    rc = ssh_scp_push_file(scp, fileName2.c_str(), length, S_IRWXU);
     if (rc != SSH_OK)
     {
-        throw SSHException("Error closing file (server)");
+        ssh_scp_free(scp);
+        throw SSHException("Can't open remote file");
+    }
+    rc = ssh_scp_write(scp, buf, length);
+    if (rc != SSH_OK)
+    {
+        ssh_scp_free(scp);
+        throw SSHException("Can't write to remote file");
     }
 
-    sftp_free(sftpSession);
+    ssh_scp_close(scp);
+    ssh_scp_free(scp);
+    delete buf;
 }
 
 void SSHConnection::deleteFile(const std::string& fileName)
