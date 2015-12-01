@@ -16,7 +16,7 @@ using namespace std;
 AddEventDialog::AddEventDialog(wxWindow* parent)
 : AEDialog(parent)
 {
-    //ctor
+    m_bitmap2->SetIcon(wxICON(aaaaa_logo));
 }
 
 Event AddEventDialog::getEvent() const
