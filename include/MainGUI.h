@@ -1,19 +1,23 @@
 #pragma once
 
 #include <wx/event.h>
-#include <wx/window.h>
+#include <wx/wx.h>
 
 #include <string>
 
 #include "Calendar.h"
 #include "Notification.h"
-#include "MainFrame.h"
+//#include "MainFrame.h"
 #include "SSHConnection.h"
 
-class MainGUI : public MainFrame
+#include "GUIFrame.h"
+#include <vector>
+
+class MainGUI: public MyFrame3
 {
-    public:
+   public:
         MainGUI(wxWindow* parent, SSHConnection* sshconn, const std::string& user);
+        ~MainGUI();
     protected:
         void onClose(wxCloseEvent& event);
         void refreshButton(wxCommandEvent& event);
