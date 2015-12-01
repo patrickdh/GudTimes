@@ -204,7 +204,7 @@ void searchTimeSlotAnnually(Event event, bool (&table)[24][4], wxDateTime date){
     wxDateTime startDT = event.getStart();
     wxDateTime endDT = event.getEnd();
 
-    for (int i = 0; i < repeat; i++){
+    for (int i = 0; i <= repeat; i++){
         if (date.IsSameDate(startDT)){
             sameDateFlag = true;
             break;
@@ -253,7 +253,7 @@ void searchTimeSlotMonthly(Event event, bool (&table)[24][4], wxDateTime date){
     wxDateTime startDT = event.getStart();
     wxDateTime endDT = event.getEnd();
 
-    for (int i = 0; i < repeat; i++){
+    for (int i = 0; i <= repeat; i++){
         if (date.IsSameDate(startDT)){
             //cout << "Passed Monthly Test" << endl;
             sameDateFlag = true;
@@ -310,7 +310,7 @@ void searchTimeSlotWeekly(Event event, bool (&table)[24][4], wxDateTime date){
     wxDateTime endDT;
     endDT = event.getEnd();
 
-    for (int i = 0; i < repeat; i++){
+    for (int i = 0; i <= repeat; i++){
         //cout << startDT.FormatISODate()<< endl;
         if (date.IsSameDate(startDT)){
             //cout << "Passed Weekly Test" << endl;
@@ -362,7 +362,7 @@ void searchTimeSlotDaily(Event event, bool (&table)[24][4], wxDateTime date){
     wxDateTime startDT = event.getStart();
     wxDateTime endDT = event.getEnd();
 
-    for (int i = 0; i < repeat; i++){
+    for (int i = 0; i <= repeat; i++){
         //cout << startDT.FormatISODate() << endl;
         if (date.FormatISODate() == startDT.FormatISODate()){
             //cout << "Passed Daily Test" << endl;
