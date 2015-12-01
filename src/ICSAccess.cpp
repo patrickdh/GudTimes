@@ -308,9 +308,9 @@ void ICSAccess::deleteEvent(int eventNum){
     ifstream original(filename);
     ofstream temp("./data/temp.txt");
     string line;
-    int eventCount;
+    int eventCount = -1;
 
-    while(original >> line){
+    while(getline(original,line)){
         if (line.find("BEGIN:VEVENT") == 0) {
             eventCount++;
         }

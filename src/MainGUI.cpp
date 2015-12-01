@@ -127,7 +127,7 @@ void MainGUI::deleteEventButton(wxCommandEvent &event)
             if (dialog->ShowModal() == wxID_OK) {
                 Calendar calTest = calendars.at(cldrList.Item(0));
                 int indx = dialog->getIndex();
-                calTest.addEvent(calTest.getEvents().at(indx));
+                calTest.deleteEvent(indx);
                 string calName = calTest.getFileName();
                 wxFileName cal(calName);
                 connection->uploadFile(cal);
@@ -317,7 +317,7 @@ void MainGUI::fetchCalendars()
         std::string filePath("./data\\" + fileName);
         string extension = filePath.substr(filePath.length()-4,4);
         if (extension == ".ics"){
-            if (filePath.substr(0,3) == "ro_"){
+            if (filePath.substr(7,3) == "ro_"){
                 calendars.push_back(Calendar(filePath,false));
             }
             else{
