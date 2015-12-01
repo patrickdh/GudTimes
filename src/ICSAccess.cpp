@@ -225,7 +225,7 @@ int ICSAccess::untilToCount(const string& firstTime, const string& freq, const s
     }
 
     if (WXstart.IsEarlierThan(WXend)){
-        WXdiff = WXstart.Subtract(WXend);
+        WXdiff = WXend.Subtract(WXstart);
         if (freq == "DAILY")
             return WXdiff.GetDays();
         else if (freq == "WEEKLY")
