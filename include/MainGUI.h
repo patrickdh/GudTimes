@@ -10,10 +10,10 @@
 //#include "MainFrame.h"
 #include "SSHConnection.h"
 
-#include "GUIFrame.h"
+#include "MainFrame.h"
 #include <vector>
 
-class MainGUI: public MyFrame3
+class MainGUI: public MainFrame
 {
    public:
         MainGUI(wxWindow* parent, SSHConnection* sshconn, const std::string& user);
@@ -30,12 +30,13 @@ class MainGUI: public MyFrame3
         void deleteCalendarButton(wxCommandEvent& event);
         void logoutButton(wxCommandEvent& event);
         void onCalendarSelect(wxCommandEvent& event);
-        void onDateSelect(wxCommandEvent& event);
+        void onDateSelect(wxCalendarEvent& event);
     private:
         SSHConnection* connection;
         std::string username;
         std::vector<Calendar> calendars;
         std::vector<Notification> notifications;
+        std::vector<wxTextCtrl*> displayVect;
         void fetchNotifications();
         void updateNotificationsFlag();
         void fetchCalendars();

@@ -5,13 +5,14 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "scheduleGui.h"
+#include "SEDialog.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
 SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetIcon(wxICON(aaaaa_logo));
 
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
@@ -32,23 +33,30 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	labelUsers = new wxStaticText( panelMain, wxID_ANY, wxT("Users to invite (comma separated): "), wxDefaultPosition, wxDefaultSize, 0 );
 	labelUsers->Wrap( -1 );
+	labelUsers->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
+
 	fgSizerEventDescription->Add( labelUsers, 0, wxALL, 5 );
 
 	textboxUsers = new wxTextCtrl( panelMain, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizerEventDescription->Add( textboxUsers, 0, wxALL, 5 );
+	textboxUsers->SetFont(wxFont( 9, 74, 90, 90, false, wxT("Century Gothic") ));
 
 	labelEventName = new wxStaticText( panelMain, wxID_ANY, wxT("Name/Description of Event: "), wxDefaultPosition, wxDefaultSize, 0 );
 	labelEventName->Wrap( -1 );
+	labelEventName->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
 	fgSizerEventDescription->Add( labelEventName, 0, wxALL, 5 );
 
 	textboxEventName = new wxTextCtrl( panelMain, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizerEventDescription->Add( textboxEventName, 0, wxALL, 5 );
+	textboxEventName->SetFont(wxFont( 9, 74, 90, 90, false, wxT("Century Gothic") ));
 
 	labelEventDuration = new wxStaticText( panelMain, wxID_ANY, wxT("Duration of Event (minutes): "), wxDefaultPosition, wxDefaultSize, 0 );
 	labelEventDuration->Wrap( -1 );
+	labelEventDuration->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
 	fgSizerEventDescription->Add( labelEventDuration, 0, wxALL, 5 );
 
 	textboxDuration = new wxTextCtrl( panelMain, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	textboxDuration->SetFont(wxFont( 9, 74, 90, 90, false, wxT("Century Gothic") ));
 
 	fgSizerEventDescription->Add( textboxDuration, 0, wxALL, 5 );
 
@@ -59,6 +67,7 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizerDate = new wxBoxSizer( wxHORIZONTAL );
 
 	calendarSelect = new wxCalendarCtrl( panelMain, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxCAL_SHOW_HOLIDAYS );
+	calendarSelect->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
 	bSizerDate->Add( calendarSelect, 0, wxALL, 5 );
 
 
@@ -71,8 +80,16 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizerEventList = new wxBoxSizer( wxVERTICAL );
 
 	eventChoiceList = new wxListBox( panelMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-	eventChoiceList->Append( wxT("08:00:00-13:00:00") );
-	bSizerEventList->Add( eventChoiceList, 1, wxALL|wxEXPAND, 5 );
+	bSizerEventList->Add( eventChoiceList, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	eventChoiceList->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
+
+    m_staticline42 = new wxStaticLine( panelMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizerComponents->Add( m_staticline42, 0, wxBOTTOM|wxEXPAND|wxTOP, 5 );
+
+	choiceList = new wxStaticText( panelMain, wxID_ANY, wxT("Available times: "), wxDefaultPosition, wxDefaultSize, 0 );
+	choiceList->Wrap( -1 );
+	choiceList->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
+	bSizerComponents->Add( choiceList, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
 	bSizerComponents->Add( bSizerEventList, 1, wxEXPAND, 5 );
@@ -80,13 +97,16 @@ SEDialog::SEDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizerButtons;
 	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
 
-	buttonFind = new wxButton( panelMain, wxID_ANY, wxT("&Find"), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonFind = new wxButton( panelMain, wxID_ANY, wxT("&Find Available Times"), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonFind->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
 	bSizerButtons->Add( buttonFind, 0, wxALL, 5 );
 
 	buttonExit = new wxButton( panelMain, wxID_ANY, wxT("&Exit"), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonExit->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
 	bSizerButtons->Add( buttonExit, 0, wxALL, 5 );
 
-	buttonCreate = new wxButton( panelMain, wxID_ANY, wxT("&Create"), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonCreate = new wxButton( panelMain, wxID_ANY, wxT("&Schedule and Invite"), wxDefaultPosition, wxDefaultSize, 0 );
+	buttonCreate->SetFont(wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ));
 	bSizerButtons->Add( buttonCreate, 0, wxALL, 5 );
 
 

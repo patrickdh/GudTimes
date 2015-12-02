@@ -26,7 +26,7 @@ ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshcon
     username = user;
 }
 
-Event ScheduleEventDialog::getEvent() const 
+Event ScheduleEventDialog::getEvent() const
 {
     return createdEvent;
 }
@@ -36,21 +36,14 @@ std::vector<std::string> ScheduleEventDialog::getUsers() const
     return userList;
 }
 
-void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
-{
-	textboxUsers->Clear();
-	textboxDuration->Clear();
-	textboxEventName->Clear();
-	eventChoiceList->Clear();
-    buttonCreate->Disable();
-}
-
 void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
 {
-    if (textboxDuration->GetValue().IsNumber()){
+    if (textboxDuration->IsEmpty() || textboxEventName->IsEmpty() || textboxUsers->IsEmpty()){
+        wxMessageBox("Please fill in all fields.");
+    }
+    else if (textboxDuration->GetValue().IsNumber()){
         eventChoiceList->Clear();
         buttonCreate->Enable();
-        vector<string> userList;
         vector<wxDateTime> timeSlots;
         string line;
         int numberSlots;
@@ -68,11 +61,19 @@ void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
         string token;
 
         while (getline(ss, token, ',')){
+            if (SSHConnection::doesUserExist(token)){
             userList.push_back(token);
+            }
+            else{
+                string error(token);
+                error.append(" is not a valid user.");
+                wxMessageBox(error.c_str());
+                return;
+            }
         }
 
-        int result = connection.findTimes(userList);
-        connection.getTimes();
+        int result = connection->findTimes(userList,duration, calendarSelect->GetDate().FormatISODate().mb_str());
+        connection->getTimes();
 
         ifstream fileIn("./data\\found_times.txt");
 
@@ -99,12 +100,12 @@ void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
             }
 
             generateTimeRanges(timeSlots, duration);
-            //eventChoiceList->InsertItems(generatedTimes);
+
         } else {
-            wxMessageBox( wxT("No availability to book an event."));
+            wxMessageBox( wxT("No availability to schedule an event."));
         }
     } else {
-        wxMessageBox(wxT("Please type a duration in numbers of minutes."));
+        wxMessageBox(wxT("Please type a duration in number of minutes."));
     }
 }
 
@@ -141,6 +142,7 @@ startDT.ParseTime(startString);
 endDT.ParseTime(endString);
 
 createdEvent = Event(details, startDT, endDT);
+this->EndModal(wxID_OK);
 }
 
 void ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int duration){
@@ -157,7 +159,9 @@ void ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int duration
     for (i = 0; i < vt.size(); i+=2){
         sMin = vt[i].GetMinute() + vt[i].GetHour()*60;
         eMin = vt[i+1].GetMinute() + vt[i+1].GetHour()*60;
-
+        if(eMin == 0) {
+            eMin = 23*60+59;
+        }
         sHour = vt[i].GetHour();
 
         cMin = sMin;

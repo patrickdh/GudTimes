@@ -26,7 +26,15 @@ NDialog::NDialog( wxWindow* parent, wxWindowID id, const wxString& title, const 
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	notificationsListBox = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_staticText1 = new wxStaticText( this, wxID_ANY, wxT("Notifications"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1->Wrap( -1 );
+	m_staticText1->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
+	
+	bSizer1->Add( m_staticText1, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	notificationsListBox = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_HSCROLL ); 
+	notificationsListBox->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
+	
 	bSizer1->Add( notificationsListBox, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer3;
@@ -36,16 +44,19 @@ NDialog::NDialog( wxWindow* parent, wxWindowID id, const wxString& title, const 
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
 	acceptButton = new wxButton( this, wxID_ANY, wxT("Accept"), wxDefaultPosition, wxDefaultSize, 0 );
+	acceptButton->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
 	acceptButton->Enable( false );
 	
 	bSizer2->Add( acceptButton, 0, wxALL, 5 );
 	
 	dismissButton = new wxButton( this, wxID_ANY, wxT("Dismiss"), wxDefaultPosition, wxDefaultSize, 0 );
+	dismissButton->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
 	dismissButton->Enable( false );
 	
 	bSizer2->Add( dismissButton, 0, wxALL, 5 );
 	
 	rejectButton = new wxButton( this, wxID_ANY, wxT("Reject"), wxDefaultPosition, wxDefaultSize, 0 );
+	rejectButton->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
 	rejectButton->Enable( false );
 	
 	bSizer2->Add( rejectButton, 0, wxALL, 5 );
@@ -57,9 +68,13 @@ NDialog::NDialog( wxWindow* parent, wxWindowID id, const wxString& title, const 
 	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
 	
 	okayButton = new wxButton( this, wxID_ANY, wxT("Okay"), wxDefaultPosition, wxDefaultSize, 0 );
+	okayButton->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
+	
 	bSizer4->Add( okayButton, 0, wxALL, 5 );
 	
 	cancelButton = new wxButton( this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	cancelButton->SetFont( wxFont( 9, 74, 90, 92, false, wxT("Century Gothic") ) );
+	
 	bSizer4->Add( cancelButton, 0, wxALL, 5 );
 	
 	

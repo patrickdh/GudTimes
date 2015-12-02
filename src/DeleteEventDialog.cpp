@@ -16,7 +16,7 @@ using namespace std;
 DeleteEventDialog::DeleteEventDialog(wxWindow* parent, const Calendar& cal)
 : DEDialog(parent)
 {
-    //ctor
+    this->SetIcon(wxICON(aaaaa_logo));
     events = cal.getEvents();
     wxString a;
 
