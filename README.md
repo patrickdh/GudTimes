@@ -5,7 +5,10 @@ For my Software Development course at Queen's University. My team is making a ca
 For our Software Develpoment course at Queen's University (CMPE/CISC 320), we were tasked with making a program in 12 weeks. We decided to base our project on a common problem students have - being unable to schedule events or meetings due to not knowing others' availability. This is why we created GüdTimes.
 
 <h2>Installation</h2>
-We developed GüdTimes in the Code::Blocks IDE written in C++. Much of our code utilized the wxWidgets Cross-Platform GUI Library using wxFormBuilder for our main GUI and wxDateTime object for the date-time information of our events. 
+We developed GüdTimes in the Code::Blocks IDE written in C++. Much of our code utilized the wxWidgets Cross-Platform GUI Library using wxFormBuilder for our main GUI and wxDateTime object for the date-time information of our events. We also use LibSSH as a main library for our SSH connection to our server.
+
+<h3>LibSSH</h3>
+Download Website: https://www.libssh.org/get-it/
 
 <h3>Code::Blocks</h3> 
 Download Website: http://www.codeblocks.org/downloads/26
