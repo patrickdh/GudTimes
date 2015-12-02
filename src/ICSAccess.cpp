@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -109,7 +110,6 @@ vector<Event> ICSAccess::getEvents()
                     {
                         wxTimeSpan estConvert(5);
                         WXstart.Subtract(estConvert);
-                        WXend.Subtract(estConvert);
                     }
                 }
 
@@ -147,7 +147,6 @@ vector<Event> ICSAccess::getEvents()
                     if (Line.find("TZID") == string::npos)
                     {
                         wxTimeSpan estConvert(5);
-                        WXstart.Subtract(estConvert);
                         WXend.Subtract(estConvert);
                     }
                 }
@@ -331,13 +330,31 @@ void ICSAccess::addEvent(const Event& eventToAdd)
     string line;
     bool written = false;
 
-    while (original >> line)
+    while (getline(original,line))
     {
+        line.erase(remove(line.begin(),line.end(),'\n'),line.end());
+        line.erase(remove(line.begin(),line.end(),'\r'),line.end());
         if (line.find("BEGIN:VEVENT") == 0 && written == false)
         {
             temp << "BEGIN:VEVENT" << endl;
-            temp << "DTSTART:" << eventToAdd.getStart().GetAsDOS() << endl;
-            temp << "DTEND:" << eventToAdd.getEnd().GetAsDOS() << endl;
+            string startTime = eventToAdd.getStart().FormatISODate().mb_str();
+            startTime.append("T");
+            startTime.append(eventToAdd.getStart().FormatISOTime().mb_str());
+            startTime.append("Z");
+            startTime.erase(16,1);
+            startTime.erase(13,1);
+            startTime.erase(7,1);
+            startTime.erase(4,1);
+            temp << "DTSTART;TZID=Eastern Standard Time:" << startTime << endl;
+            string endTime = eventToAdd.getEnd().FormatISODate().mb_str();
+            endTime.append("T");
+            endTime.append(eventToAdd.getEnd().FormatISOTime().mb_str());
+            endTime.append("Z");
+            endTime.erase(16,1);
+            endTime.erase(13,1);
+            endTime.erase(7,1);
+            endTime.erase(4,1);
+            temp << "DTEND;TZID=Eastern Standard Time:" << endTime << endl;
             if (eventToAdd.getFrequency() != FrequencyEnum::NONE)
             {
                 if (eventToAdd.getFrequency() == FrequencyEnum::DAILY)
@@ -370,10 +387,12 @@ void ICSAccess::deleteEvent(int eventNum)
     ifstream original(filename);
     ofstream temp("./data/temp.txt");
     string line;
-    int eventCount;
+    int eventCount = -1;
 
-    while(original >> line)
+    while(getline(original,line))
     {
+        line.erase(remove(line.begin(),line.end(),'\n'),line.end());
+        line.erase(remove(line.begin(),line.end(),'\r'),line.end());
         if (line.find("BEGIN:VEVENT") == 0)
         {
             eventCount++;

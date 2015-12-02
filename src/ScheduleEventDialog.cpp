@@ -10,41 +10,184 @@
 #endif // WX_PRECOMP
 
 #include "ScheduleEventDialog.h"
+#include "Event.h"
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 using namespace std;
 
 ScheduleEventDialog::ScheduleEventDialog(wxWindow* parent, SSHConnection* sshconn, const std::string& user)
 : SEDialog(parent)
 {
-    //ctor
+    connection = sshconn;
+    username = user;
 }
 
-Event ScheduleEventDialog::getEvent() const
+Event ScheduleEventDialog::getEvent() const 
 {
-
+    return createdEvent;
 }
 
 std::vector<std::string> ScheduleEventDialog::getUsers() const
 {
-
+    return userList;
 }
 
-void ScheduleEventDialog::onChange(wxCommandEvent& event)
+void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
 {
-
+	textboxUsers->Clear();
+	textboxDuration->Clear();
+	textboxEventName->Clear();
+	eventChoiceList->Clear();
+    buttonCreate->Disable();
 }
 
-void ScheduleEventDialog::onFindTimes(wxCommandEvent& event)
+void ScheduleEventDialog::OnFindTimes(wxCommandEvent& event)
 {
+    if (textboxDuration->GetValue().IsNumber()){
+        eventChoiceList->Clear();
+        buttonCreate->Enable();
+        vector<string> userList;
+        vector<wxDateTime> timeSlots;
+        string line;
+        int numberSlots;
+        wxString bufferStart, bufferEnd;
+        wxDateTime bufferStartDT, bufferEndDT;
 
+        wxString wxUsers = textboxUsers->GetValue();
+        wxString durationString = textboxDuration->GetValue();
+
+        int duration = wxAtoi(durationString);
+
+        string usersString = string(wxUsers.mb_str());
+
+        stringstream ss (usersString);
+        string token;
+
+        while (getline(ss, token, ',')){
+            userList.push_back(token);
+        }
+
+        int result = connection.findTimes(userList);
+        connection.getTimes();
+
+        ifstream fileIn("./data\\found_times.txt");
+
+        fileIn >> numberSlots;
+        cout << numberSlots << endl;
+        getline(fileIn, line);
+        if (numberSlots != 0){
+            while(getline(fileIn, line)){
+
+                cout << line << endl;
+
+                bufferStart = line.substr(0,8);
+                bufferEnd   = line.substr(9,8);
+
+                cout << bufferStart << endl;
+                cout << bufferEnd << endl;
+
+
+                bufferStartDT.ParseTime(bufferStart);
+                bufferEndDT.ParseTime(bufferEnd);
+
+                timeSlots.push_back(bufferStartDT);
+                timeSlots.push_back(bufferEndDT);
+            }
+
+            generateTimeRanges(timeSlots, duration);
+            //eventChoiceList->InsertItems(generatedTimes);
+        } else {
+            wxMessageBox( wxT("No availability to book an event."));
+        }
+    } else {
+        wxMessageBox(wxT("Please type a duration in numbers of minutes."));
+    }
 }
 
-void ScheduleEventDialog::onOK(wxCommandEvent& event)
+void ScheduleEventDialog::OnExit( wxCommandEvent& event )
 {
-
+    EndModal(wxID_CANCEL);
 }
 
-void ScheduleEventDialog::onCancel(wxCommandEvent& event)
+void ScheduleEventDialog::OnFormChange(wxCommandEvent& event)
 {
+    eventChoiceList->Clear();
+    buttonCreate->Disable();
+}
 
+void ScheduleEventDialog::OnFormChange(wxCalendarEvent& event){
+    eventChoiceList->Clear();
+    buttonCreate->Disable();
+}
+
+void ScheduleEventDialog::OnCreate( wxCommandEvent& event )
+{
+wxString startString;
+wxString endString;
+wxDateTime date = calendarSelect->GetDate();
+wxDateTime startDT = date;
+wxDateTime endDT = date;
+wxString choice = eventChoiceList->GetString(eventChoiceList->GetSelection());
+string details = textboxEventName->GetValue().mb_str();
+
+startString = choice.SubString(0,7);
+endString   = choice.SubString(9,16);
+
+startDT.ParseTime(startString);
+endDT.ParseTime(endString);
+
+createdEvent = Event(details, startDT, endDT);
+}
+
+void ScheduleEventDialog::generateTimeRanges(vector<wxDateTime> vt, int duration){
+    int i;
+    int sMin, eMin; //starting time and ending time in minutes
+    int sHour; //current hour
+    int cMin; //current time in minutes
+    int hourAdjust, minuteAdjust;
+    wxDateTime bufferDT(0,0,0);
+
+    wxArrayString listItems;
+    wxString buffer;
+
+    for (i = 0; i < vt.size(); i+=2){
+        sMin = vt[i].GetMinute() + vt[i].GetHour()*60;
+        eMin = vt[i+1].GetMinute() + vt[i+1].GetHour()*60;
+
+        sHour = vt[i].GetHour();
+
+        cMin = sMin;
+
+        hourAdjust = (int)(duration / 60);
+        minuteAdjust = duration - (hourAdjust * 60);
+
+        while ((eMin - cMin) >= duration){
+            bufferDT.SetHour(vt[i].GetHour());
+            bufferDT.SetMinute(vt[i].GetMinute());
+            bufferDT.SetSecond(0);
+
+            buffer << bufferDT.FormatISOTime();
+
+            if ((vt[i].GetMinute() + minuteAdjust) >= 60)
+                bufferDT.SetHour(vt[i].GetHour() + 1 + hourAdjust);
+            else
+                bufferDT.SetHour(vt[i].GetHour() + hourAdjust);
+            bufferDT.SetMinute((vt[i].GetMinute() + minuteAdjust) % 60);
+            bufferDT.SetSecond(0);
+
+            buffer << "-" << bufferDT.FormatISOTime();
+            eventChoiceList->Append(buffer);
+
+            buffer.clear();
+
+            vt[i].SetMinute((vt[i].GetMinute() + 15) % 60);
+            if (vt[i].GetMinute() == 0)
+                vt[i].SetHour(vt[i].GetHour() + 1);
+            cMin += 15;
+        }
+    }
 }
